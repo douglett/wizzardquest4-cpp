@@ -1,0 +1,18 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${default}",
+                "C:\\bin\\devlib\\raylib\\include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "c:/bin/w64devkit-2.8/bin/g++.exe"
+        }
+    ],
+    "version": 4
+}
