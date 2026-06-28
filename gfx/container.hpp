@@ -7,19 +7,24 @@ using namespace std;
 
 // paintable object base class
 struct Paintable {
-	using ptr = shared_ptr<Paintable>;
+	// using ptr = shared_ptr<Paintable>;
 	int x = 0, y = 0, z = 0;
+	void paint(int x, int y) {}
+};
+
+struct Paint {
+	Paintable p;
 	virtual void paint(int x, int y) {}
 };
 
 // paintable object with children
 struct Container : Paintable {
-	vector<Paintable::ptr> children;
+	vector<shared_ptr<Paint>> children;
 
-	void append(Paintable::ptr p) { children.push_back(p); }
-	void remove(Paintable::ptr p) { children.erase(find(children.begin(), children.end(), p)); }
+	void append(shared_ptr<Paint> p) { children.push_back(p); }
+	void remove(shared_ptr<Paint> p) { children.erase(find(children.begin(), children.end(), p)); }
 	
-	virtual void paint(int x, int y) {
+	void paint(int x, int y) {
 		for (auto &c : children)
 			c->paint(x, y);
 	}
