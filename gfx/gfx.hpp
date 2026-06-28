@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "screen.hpp"
 #include "container.hpp"
+#include "shape.hpp"
 
 struct GFX {
 	Screen screen;
