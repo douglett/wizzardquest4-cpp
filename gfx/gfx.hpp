@@ -3,6 +3,7 @@
 #include "screen.hpp"
 #include "container.hpp"
 #include "shape.hpp"
+#include "sprite.hpp"
 
 struct GFX {
 	Screen screen;

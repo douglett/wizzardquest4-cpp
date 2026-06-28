@@ -20,6 +20,12 @@ void mainloop() {
 		box1->color = RED;
 	scene.append(box1);
 
+	auto sprite1 = make_shared<Sprite>();
+		sprite1->x = sprite1->y = 60;
+		sprite1->tile = 2;
+		sprite1->texture = LoadTexture("../wizzardquest4/assets/sprites.png");
+	scene.append(sprite1);
+
 	while (!gfx.shouldQuit()) {
 		scene.paint(0, 0);
 		gfx.flip();
