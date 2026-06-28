@@ -1,14 +1,17 @@
 #pragma once
 #include "raylib.h"
 #include "screen.hpp"
+#include "container.hpp"
 
-struct GFX : Screen {
-	// Screen screen;
+struct GFX {
+	Screen screen;
 
-	// void init() {
-	// 	screen.init();
-	// }
-	// void destroy() {
-	// 	screen.destroy();
-	// }
+	// forward to screen
+	int  init()    { return screen.init(); }
+	void destroy() { screen.destroy(); }
+	void begin()   { screen.begin(); }
+	void flip()    { screen.flip(); }
+
+	// helpers
+	bool shouldQuit() { return WindowShouldClose(); }
 };

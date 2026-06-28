@@ -25,9 +25,9 @@ struct Screen {
 		CloseWindow();  // Close window and OpenGL context
 	}
 
-	bool shouldQuit() {
-		return WindowShouldClose();
-	}
+	// bool shouldQuit() {
+	// 	return WindowShouldClose();
+	// }
 
 	// begin drawing mode (automatic)
 	void begin() {

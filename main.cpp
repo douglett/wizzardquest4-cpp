@@ -1,15 +1,23 @@
 #include "gfx/gfx.hpp"
+
 GFX gfx;
+Container scene;
+
+void mainloop();
 
 int main() {
-	printf("hello world 1\n");
-	printf("hello world 2\n"); 
-	printf("hello world 3\n");
-
+	printf("starting WizzardQuest 4!\n");
 	gfx.init();
+	mainloop();
+	gfx.destroy();
+}
+
+void mainloop() {
+	// shape box1 = {10, 10, 0, RED};
+	// scene.append();
+
 	while (!gfx.shouldQuit()) {
-		// here
+		scene.paint(0, 0);
 		gfx.flip();
 	}
-	gfx.destroy();
 }
