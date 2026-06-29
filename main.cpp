@@ -31,6 +31,9 @@ void mainloop() {
 		tmap->texture = LoadTexture("../wizzardquest4/assets/monotiles.png");
 	scene.append(tmap);
 
+	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
+	scene.y = (gfx.screen.height - tmap->theight*tmap->tsize) / 2;
+
 	while (!gfx.shouldQuit()) {
 		scene.paint(0, 0);
 		gfx.flip();

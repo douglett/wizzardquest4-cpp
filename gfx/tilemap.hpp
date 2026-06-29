@@ -4,24 +4,28 @@
 #include <sstream>
 
 struct TileMap : Paintable {
-	int width = 0, height = 0;
+	int twidth = 0, theight = 0, tsize = 16;
 	vector<int> data, cdata;
 	Texture2D texture;
+	bool debug = true;
 
 	int load(const string& fname) {
 		// open doc
 		pugi::xml_document doc;
 		auto result = doc.load_file(fname.c_str());
 		if (!result)
-			return fprintf(stderr, "xml load failed: %s\n", result.description()), -1;
+			return fprintf(stderr, "map xml load failed: %s\n", result.description()), -1;
 		// load data
-		width = doc.child("map").attribute("width").as_int();
-		height = doc.child("map").attribute("width").as_int();
-		printf("%d %d\n", width, height);
+		twidth  = doc.child("map").attribute("width").as_int();
+		theight = doc.child("map").attribute("height").as_int();
 		// load layers data
 		loadlayer(doc, data,  "map/layer[@name='map']/data");
 		loadlayer(doc, cdata, "map/layer[@name='collision']/data");
+		// sanity check
+		if (twidth == 0 || theight == 0 || twidth*theight != (int)data.size() || data.size() != cdata.size())
+			return printf("map parse error\n"), -1;
 		// ok
+		printf("map loaded '%s': w: %d, h: %d\n", fname.c_str(), twidth, theight);
 		return 0;
 	}
 
@@ -41,10 +45,18 @@ struct TileMap : Paintable {
 		// cout << data.size() << endl;
 	}
 
-	void paint(int xpos, int ypos) {
-		for (int y = 0; y < height; y++)
-		for (int x = 0; x < width; x++) {
-			// TODO
+	void paint(int xoff, int yoff) {
+		Color color = { 255, 0, 0, 64 };
+		for (int yy = 0; yy < theight; yy++)
+		for (int xx = 0; xx < twidth; xx++) {
+			// show map tile
+			int t = data.at(yy * twidth + xx);
+			if (t > 0)
+				Screen::blitt(texture, tsize, t-1, xoff+x + xx*tsize, yoff+y + yy*tsize);
+			// show collision layer
+			int c = cdata.at(yy * twidth + xx);
+			if (c > 0 && debug)
+				DrawRectangle(xoff+x + xx*tsize, yoff+y + yy*tsize, tsize, tsize, color);
 		}
 	}
 };

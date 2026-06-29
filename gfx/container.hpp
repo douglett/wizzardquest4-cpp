@@ -19,8 +19,8 @@ struct Container : Paintable {
 	void append(Paintable::ptr p) { children.push_back(p); }
 	void remove(Paintable::ptr p) { children.erase(find(children.begin(), children.end(), p)); }
 	
-	virtual void paint(int x, int y) {
+	virtual void paint(int xoff, int yoff) {
 		for (auto &c : children)
-			c->paint(x, y);
+			c->paint(xoff + x, yoff + y);
 	}
 };

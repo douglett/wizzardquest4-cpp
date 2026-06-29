@@ -4,7 +4,7 @@
 using namespace std;
 
 struct Screen {
-	int width = 200, height = 200;
+	int width = 160, height = 160;
 	string winname = "mygame";
 	float zoom = 3;
 	Color bgcolor = BLACK;
@@ -25,10 +25,6 @@ struct Screen {
 		CloseWindow();  // Close window and OpenGL context
 	}
 
-	// bool shouldQuit() {
-	// 	return WindowShouldClose();
-	// }
-
 	// begin drawing mode (automatic)
 	void begin() {
 		BeginDrawing();
@@ -47,5 +43,15 @@ struct Screen {
 		EndDrawing();
 		// begin drawing mode for next frame
 		begin();
+	}
+
+	// blit texture
+	static void blitt(Texture2D texture, int tsize, int tile, int x, int y) {
+		int tx = tile % (texture.width / tsize);
+		int ty = tile / (texture.width / tsize);
+		float t = tsize;
+		Rectangle src{ tx*t, ty*t, t, t };
+		Vector2   dst{ float(x), float(y) };
+		DrawTextureRec(texture, src, dst, WHITE);
 	}
 };

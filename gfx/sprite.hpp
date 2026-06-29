@@ -7,11 +7,6 @@ struct Sprite : Paintable {
 	Texture2D texture;
 
 	void paint(int xoff, int yoff) {
-		int tx = tile % (texture.width / tsize);
-		int ty = tile / (texture.width / tsize);
-		float t = tsize;
-		Rectangle src{ tx*t, ty*t, t, t };
-		Vector2   dst{ float(xoff+x), float(yoff+y) };
-		DrawTextureRec(texture, src, dst, WHITE);
+		Screen::blitt(texture, tsize, tile, xoff+x, yoff+y);
 	}
 };
