@@ -4,6 +4,7 @@
 #include "container.hpp"
 #include "shape.hpp"
 #include "sprite.hpp"
+#include "tilemap.hpp"
 
 struct GFX {
 	Screen screen;

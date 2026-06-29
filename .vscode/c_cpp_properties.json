@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${default}",
-                "C:\\bin\\devlib\\raylib\\include"
+                "C:\\bin\\devlib\\raylib\\include",
+                "C:\\bin\\devlib\\tinyxml2",
+                "C:\\bin\\devlib\\pugixml"
             ],
             "defines": [
                 "_DEBUG",

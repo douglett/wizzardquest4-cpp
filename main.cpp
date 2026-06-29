@@ -26,6 +26,9 @@ void mainloop() {
 		sprite1->texture = LoadTexture("../wizzardquest4/assets/sprites.png");
 	scene.append(sprite1);
 
+	auto tmap = make_shared<TileMap>();
+	tmap->load("../wizzardquest4/assets/level1.tmx");
+
 	while (!gfx.shouldQuit()) {
 		scene.paint(0, 0);
 		gfx.flip();
