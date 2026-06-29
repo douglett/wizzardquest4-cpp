@@ -27,7 +27,9 @@ void mainloop() {
 	scene.append(sprite1);
 
 	auto tmap = make_shared<TileMap>();
-	tmap->load("../wizzardquest4/assets/level1.tmx");
+		tmap->load("../wizzardquest4/assets/level1.tmx");
+		tmap->texture = LoadTexture("../wizzardquest4/assets/monotiles.png");
+	scene.append(tmap);
 
 	while (!gfx.shouldQuit()) {
 		scene.paint(0, 0);
