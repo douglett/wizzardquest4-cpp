@@ -6,7 +6,7 @@ using namespace std;
 struct Screen {
 	int width = 160, height = 160;
 	string winname = "mygame";
-	float zoom = 3;
+	float zoom = 4;
 	Color bgcolor = BLACK;
 	Camera2D camera = {0};
 

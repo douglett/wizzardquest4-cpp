@@ -2,7 +2,6 @@
 #include "container.hpp"
 
 struct Sprite : Paintable {
-	string id;
 	int tsize = 16, tile = 0;
 	Texture2D texture;
 

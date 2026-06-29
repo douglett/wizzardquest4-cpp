@@ -11,6 +11,7 @@ struct TileMap : Paintable {
 
 	int load(const string& fname) {
 		// open doc
+		id = fname;
 		pugi::xml_document doc;
 		auto result = doc.load_file(fname.c_str());
 		if (!result)
