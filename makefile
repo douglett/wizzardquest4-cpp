@@ -1,6 +1,6 @@
 SRC = main.cpp
 OUT = main.exe
-HEAD = $(wildcard gfx/*.hpp)
+HEAD = $(wildcard *.hpp gfx/*.hpp)
 
 $(OUT): $(SRC) $(HEAD)
 	g++ -Wall -std=c++23 -gdwarf -o $(OUT) $(SRC) \
