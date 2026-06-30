@@ -1,25 +1,11 @@
 #pragma once
 #include "globals.hpp"
 
-// struct Mob {};
-
-struct Slime : Sprite {
-	Slime() {
-		id = "slime";
-		texture = textureSprites;
-		tile = 2;
-	}
-
-	virtual void update() {
-		y++;
-	}
-};
-
-struct Wizzard : Sprite {
+struct Mob : Sprite {
 	int dir = -1, step = 0;
 
-	Wizzard() {
-		id = "wizzard";
+	Mob() {
+		id = "mob";
 		texture = textureSprites;
 		tile = 2;
 	}
@@ -33,5 +19,17 @@ struct Wizzard : Sprite {
 		step++;
 		if (step >= tsize)
 			dir = -1, step = 0;
+	}
+};
+
+struct Slime : Mob {
+	Slime() {
+		id = "slime";
+	}
+};
+
+struct Wizzard : Mob {
+	Wizzard() {
+		id = "wizzard";
 	}
 };

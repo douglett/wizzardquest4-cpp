@@ -9,5 +9,7 @@ struct Sprite : Paintable {
 		Screen::blitt(texture, tsize, tile, xoff+x, yoff+y);
 	}
 
-	virtual void tpos(int tx, int ty) { x = tx*tsize, y = ty*tsize; }
+	int  tx() { return x / tsize; }
+	int  yx() { return y / tsize; }
+	void tpos(int tx, int ty) { x = tx*tsize, y = ty*tsize; }
 };
