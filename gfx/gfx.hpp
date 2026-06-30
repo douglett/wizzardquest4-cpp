@@ -7,6 +7,8 @@
 #include "tilemap.hpp"
 
 struct GFX {
+	struct rect { int x, y, w, h; };
+
 	Screen screen;
 
 	// forward to screen
@@ -16,5 +18,15 @@ struct GFX {
 	void flip()    { screen.flip(); }
 
 	// helpers
-	bool shouldQuit() { return WindowShouldClose(); }
+	static bool shouldQuit() { return WindowShouldClose(); }
+
+	static rect dir2point(int dir, int d=1) {
+		switch (dir) {
+			case 0:   return {  0, -d };
+			case 1:   return {  d,  0 };
+			case 2:   return {  0,  d };
+			case 3:   return { -d,  0 };
+			default:  return {  0,  0 };
+		}
+	}
 };

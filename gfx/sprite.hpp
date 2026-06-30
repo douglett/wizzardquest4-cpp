@@ -10,6 +10,6 @@ struct Sprite : Paintable {
 	}
 
 	int  tx() { return x / tsize; }
-	int  yx() { return y / tsize; }
+	int  ty() { return y / tsize; }
 	void tpos(int tx, int ty) { x = tx*tsize, y = ty*tsize; }
 };

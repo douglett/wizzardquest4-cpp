@@ -3,6 +3,7 @@
 
 GFX gfx;
 Container scene;
+shared_ptr<TileMap> tmap;
 Texture2D textureSprites;
 Texture2D textureTiles;
 
@@ -11,6 +12,22 @@ int main() {
 	gfx.init();
 	mainloop();
 	gfx.destroy();
+}
+
+int collide(Mob &mob, int dir) {
+	// map collision
+	auto r = gfx.dir2point(dir);
+	auto c = tmap->at(mob.tx() + r.x, mob.ty() + r.y).collision;
+	if (c)  return c;
+	// mob collision
+	for (auto c : scene.children) {
+		if (c.get() == &mob)  continue;
+		if (auto m = static_pointer_cast<Mob>(c)) {
+			if (mob.tx()+r.x == m->tx() && mob.ty()+r.y == m->ty())
+				return 1;
+		}
+	}
+	return 0;
 }
 
 void mainloop() {
@@ -22,7 +39,7 @@ void mainloop() {
 	textureSprites = LoadTexture("../wizzardquest4/assets/sprites.png");
 	textureTiles   = LoadTexture("../wizzardquest4/assets/monotiles.png");
 
-	auto tmap = make_shared<TileMap>();
+	tmap = make_shared<TileMap>();
 		tmap->load("../wizzardquest4/assets/level1.tmx");
 		tmap->texture = textureTiles;
 		scene.append(tmap);
@@ -40,24 +57,14 @@ void mainloop() {
 
 	while (!gfx.shouldQuit()) {
 		if (wizzard->dir == -1) {
-			if (IsKeyDown(KEY_UP))     wizzard->walk(0);
-			if (IsKeyDown(KEY_RIGHT))  wizzard->walk(1);
-			if (IsKeyDown(KEY_DOWN))   wizzard->walk(2);
-			if (IsKeyDown(KEY_LEFT))   wizzard->walk(3);
+			if (IsKeyDown(KEY_UP)    && !collide(*wizzard, 0))  wizzard->walk(0);
+			if (IsKeyDown(KEY_RIGHT) && !collide(*wizzard, 1))  wizzard->walk(1);
+			if (IsKeyDown(KEY_DOWN)  && !collide(*wizzard, 2))  wizzard->walk(2);
+			if (IsKeyDown(KEY_LEFT)  && !collide(*wizzard, 3))  wizzard->walk(3);
 		}
 
 		scene.update();
 		scene.paint(0, 0);
 		gfx.flip();
-	}
-}
-
-point dir2point(int dir, int mul) {
-	switch (dir) {
-		case 0:   return {  0, -1 };
-		case 1:   return {  1,  0 };
-		case 2:   return {  0,  1 };
-		case 3:   return { -1,  0 };
-		default:  return {  0,  0 };
 	}
 }

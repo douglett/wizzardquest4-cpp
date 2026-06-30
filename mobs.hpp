@@ -14,7 +14,8 @@ struct Mob : Sprite {
 
 	virtual void update() {
 		if (dir < 0)  return;
-		auto p = dir2point(dir);
+		tile = dir;
+		auto p = GFX::dir2point(dir);
 		x += p.x, y += p.y;
 		step++;
 		if (step >= tsize)

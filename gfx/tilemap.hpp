@@ -4,6 +4,7 @@
 #include <sstream>
 
 struct TileMap : Paintable {
+	struct tiledata { int tile, collision; };
 	int twidth = 0, theight = 0, tsize = 16;
 	vector<int> data, cdata;
 	Texture2D texture;
@@ -59,5 +60,11 @@ struct TileMap : Paintable {
 			if (c > 0 && debug)
 				DrawRectangle(xoff+x + xx*tsize, yoff+y + yy*tsize, tsize, tsize, color);
 		}
+	}
+
+	tiledata at(int tx, int ty) {
+		if (tx < 0 || ty < 0 || tx >= twidth || ty >= theight)
+			return { 0, 0 };
+		return { data[ty*twidth+tx], cdata[ty*twidth+tx] };
 	}
 };
