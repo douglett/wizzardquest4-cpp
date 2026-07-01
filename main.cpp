@@ -7,6 +7,8 @@ shared_ptr<TileMap> tmap;
 Texture2D textureSprites;
 Texture2D textureTiles;
 
+void  mainloop();
+
 int main() {
 	printf("starting WizzardQuest 4!\n");
 	gfx.init();
@@ -55,12 +57,21 @@ void mainloop() {
 	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
 	scene.y = (gfx.screen.height - tmap->theight*tmap->tsize) / 2;
 
+	string state = "rest";
+
 	while (!gfx.shouldQuit()) {
-		if (wizzard->dir == -1) {
-			if (IsKeyDown(KEY_UP)    && !collide(*wizzard, 0))  wizzard->walk(0);
-			if (IsKeyDown(KEY_RIGHT) && !collide(*wizzard, 1))  wizzard->walk(1);
-			if (IsKeyDown(KEY_DOWN)  && !collide(*wizzard, 2))  wizzard->walk(2);
-			if (IsKeyDown(KEY_LEFT)  && !collide(*wizzard, 3))  wizzard->walk(3);
+		if (state == "wwalk") {
+			if (wizzard->dir == -1) state = "ewalk";
+		}
+		if (state == "ewalk") {
+			// move enemies here
+			state = "rest";
+		}
+		if (state == "rest") {
+			if (IsKeyDown(KEY_UP)    && !collide(*wizzard, 0))  wizzard->walk(0), state = "wwalk";
+			if (IsKeyDown(KEY_RIGHT) && !collide(*wizzard, 1))  wizzard->walk(1), state = "wwalk";
+			if (IsKeyDown(KEY_DOWN)  && !collide(*wizzard, 2))  wizzard->walk(2), state = "wwalk";
+			if (IsKeyDown(KEY_LEFT)  && !collide(*wizzard, 3))  wizzard->walk(3), state = "wwalk";
 		}
 
 		scene.update();
