@@ -10,6 +10,7 @@ struct Mob : Sprite {
 		tile = 2;
 	}
 
+	void face(int wdir) { tile = wdir; }
 	void walk(int wdir) { dir = wdir, step = 0; }
 
 	virtual void update() {

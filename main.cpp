@@ -68,10 +68,19 @@ void mainloop() {
 			state = "rest";
 		}
 		if (state == "rest") {
-			if (IsKeyDown(KEY_UP)    && !collide(*wizzard, 0))  wizzard->walk(0), state = "wwalk";
-			if (IsKeyDown(KEY_RIGHT) && !collide(*wizzard, 1))  wizzard->walk(1), state = "wwalk";
-			if (IsKeyDown(KEY_DOWN)  && !collide(*wizzard, 2))  wizzard->walk(2), state = "wwalk";
-			if (IsKeyDown(KEY_LEFT)  && !collide(*wizzard, 3))  wizzard->walk(3), state = "wwalk";
+			if (IsKeyDown(KEY_UP)) {
+				wizzard->face(0);
+				if (!collide(*wizzard, 0)) wizzard->walk(0), state = "wwalk";
+			} else if (IsKeyDown(KEY_RIGHT)) {
+				wizzard->face(1);
+				if (!collide(*wizzard, 1))  wizzard->walk(1), state = "wwalk";
+			} else if (IsKeyDown(KEY_DOWN)) {
+				wizzard->face(2);
+				if (!collide(*wizzard, 2))  wizzard->walk(2), state = "wwalk";
+			} else if (IsKeyDown(KEY_LEFT)) {
+				wizzard->face(3);
+				if (!collide(*wizzard, 3))  wizzard->walk(3), state = "wwalk";
+			}
 		}
 
 		scene.update();
