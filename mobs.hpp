@@ -13,6 +13,10 @@ struct Mob : Sprite {
 	void face(int wdir) { tile = wdir; }
 	void walk(int wdir) { dir = wdir, step = 0; }
 
+	void kill() {
+		printf("kill %lld\n", (size_t)this);
+	}
+
 	virtual void update() {
 		if (dir < 0)  return;
 		tile = dir;

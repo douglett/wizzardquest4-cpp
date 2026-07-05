@@ -16,20 +16,22 @@ int main() {
 	gfx.destroy();
 }
 
-int collide(Mob &mob, int dir) {
+int collideMap(Mob &mob, int dir) {
 	// map collision
 	auto r = gfx.dir2point(dir);
-	auto c = tmap->at(mob.tx() + r.x, mob.ty() + r.y).collision;
-	if (c)  return c;
-	// mob collision
+	return tmap->at(mob.tx() + r.x, mob.ty() + r.y).collision;
+}
+
+void killMob(int tx, int ty, int dir) {
+	auto r = gfx.dir2point(dir);
 	for (auto c : scene.children) {
-		if (c.get() == &mob)  continue;
 		if (auto m = static_pointer_cast<Mob>(c)) {
-			if (mob.tx()+r.x == m->tx() && mob.ty()+r.y == m->ty())
-				return 1;
+			if (m->tx() == tx+r.x && m->ty() == ty+r.y) {
+				m->kill();
+				scene.remove(m);
+			}
 		}
 	}
-	return 0;
 }
 
 void mainloop() {
@@ -68,18 +70,18 @@ void mainloop() {
 			state = "rest";
 		}
 		if (state == "rest") {
-			if (IsKeyDown(KEY_UP)) {
-				wizzard->face(0);
-				if (!collide(*wizzard, 0)) wizzard->walk(0), state = "wwalk";
-			} else if (IsKeyDown(KEY_RIGHT)) {
-				wizzard->face(1);
-				if (!collide(*wizzard, 1))  wizzard->walk(1), state = "wwalk";
-			} else if (IsKeyDown(KEY_DOWN)) {
-				wizzard->face(2);
-				if (!collide(*wizzard, 2))  wizzard->walk(2), state = "wwalk";
-			} else if (IsKeyDown(KEY_LEFT)) {
-				wizzard->face(3);
-				if (!collide(*wizzard, 3))  wizzard->walk(3), state = "wwalk";
+			int dir = -1;
+			if      (IsKeyDown(KEY_UP))     dir = 0;
+			else if (IsKeyDown(KEY_RIGHT))  dir = 1;
+			else if (IsKeyDown(KEY_DOWN))   dir = 2;
+			else if (IsKeyDown(KEY_LEFT))   dir = 3;
+			// move animation
+			if (dir > -1) {
+				wizzard->face(dir);
+				if (!collideMap(*wizzard, dir))
+					wizzard->walk(dir),
+					state = "wwalk",
+					killMob(wizzard->tx(), wizzard->ty(), dir);
 			}
 		}
 
