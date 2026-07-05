@@ -8,7 +8,7 @@ struct TileMap : Paintable {
 	int twidth = 0, theight = 0, tsize = 16;
 	vector<int> data, cdata;
 	Texture2D texture;
-	bool debug = true;
+	bool debug = false;
 
 	int load(const string& fname) {
 		// open doc

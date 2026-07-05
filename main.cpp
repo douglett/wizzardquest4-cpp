@@ -40,21 +40,23 @@ void killMob(int tx, int ty, int dir) {
 int killPlayer(Mob &mob, int dir) {
 	auto r = gfx.dir2point(dir);
 	if (mob.tx()+r.x == wizzard->tx() && mob.ty()+r.y == wizzard->ty()) {
+		mob.walk(mob.dir);
 		wizzard->kill();
+		scene.remove(wizzard);
 		explosion->spawn(wizzard->tx(), wizzard->ty());
 		return true;
 	}
 	return false;
 }
 
-void clearDead() {
-	for (auto c : scene.children)
-		if (auto m = dynamic_pointer_cast<Mob>(c))
-			if (!m->alive) {
-				printf("removing: %s\n", m->id.c_str());
-				scene.remove(m);
-			}
-}
+// void clearDead() {
+// 	for (auto c : scene.children)
+// 		if (auto m = dynamic_pointer_cast<Mob>(c))
+// 			if (!m->alive) {
+// 				printf("removing: %s\n", m->id.c_str());
+// 				scene.remove(m);
+// 			}
+// }
 
 void mainloop() {
 	auto box1 = make_shared<ShapeRectangle>();
@@ -68,6 +70,7 @@ void mainloop() {
 	tmap = make_shared<TileMap>();
 		tmap->load("../wizzardquest4/assets/level1.tmx");
 		tmap->texture = textureTiles;
+		// tmap->debug = true;
 		scene.append(tmap);
 
 	wizzard = make_shared<Wizzard>();
@@ -80,6 +83,7 @@ void mainloop() {
 
 	auto slime = make_shared<Slime>();
 		slime->tpos(3, 1);
+		slime->face(3);
 		scene.append(slime);
 
 	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
@@ -89,13 +93,26 @@ void mainloop() {
 
 	while (!gfx.shouldQuit()) {
 		if (state == "wwalk") {
-			if (wizzard->dir == -1) state = "ewalk";
+			// animate player moving
+			if (wizzard->state == "idle") state = "ewalkstart";
+		}
+		if (state == "ewalkstart") {
+			// move enemies
+			for (auto c : scene.children)
+				if (auto m = dynamic_pointer_cast<Slime>(c))
+					killPlayer(*m, m->dir);
+			state = "ewalk";
 		}
 		if (state == "ewalk") {
-			// move enemies here
-			state = "rest";
+			// animate enemies moving
+			int moving = 0;
+			for (auto c : scene.children)
+				if (auto m = dynamic_pointer_cast<Mob>(c))
+					moving += (m->state != "idle");
+			if (moving == 0)
+				state = "rest";
 		}
-		if (state == "rest") {
+		if (state == "rest" && wizzard->alive) {
 			int dir = -1;
 			if      (IsKeyDown(KEY_UP))     dir = 0;
 			else if (IsKeyDown(KEY_RIGHT))  dir = 1;
@@ -112,7 +129,6 @@ void mainloop() {
 		}
 
 		scene.update();
-		clearDead();
 		scene.paint(0, 0);
 		gfx.flip();
 	}

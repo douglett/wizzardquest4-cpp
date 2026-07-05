@@ -2,31 +2,32 @@
 #include "globals.hpp"
 
 struct Mob : Sprite {
-	int dir = -1, step = 0;
+	string state = "idle";
+	int dir = 2, step = 0;
 	bool alive = true;
 
 	Mob() {
 		id = "mob";
 		texture = textureSprites;
-		tile = 2;
+		face(dir);
 	}
 
-	void face(int wdir) { tile = wdir; }
-	void walk(int wdir) { dir = wdir, step = 0; }
+	void face(int wdir) { dir = tile = wdir; }
+	void walk(int wdir) { dir = wdir, step = 0, state = "walk"; }
 
 	void kill() {
-		printf("kill %lld\n", (size_t)this);
+		printf("kill: %s, %lld\n", id.c_str(), (size_t)this);
 		alive = false;
 	}
 
 	virtual void update() {
-		if (dir < 0)  return;
+		if (state != "walk")  return;
 		tile = dir;
 		auto p = GFX::dir2point(dir);
 		x += p.x, y += p.y;
 		step++;
 		if (step >= tsize)
-			dir = -1, step = 0;
+			state = "idle", step = 0;
 	}
 };
 
@@ -49,9 +50,10 @@ struct Explosion : Container {
 	Explosion() {
 		id = "explosion";
 		for (int i = 0; i < 4; i++) {
-			auto box = make_shared<ShapeCircle>();
-			box->radius = 3;
-			this->append(box);
+			auto ex = make_shared<ShapeCircle>();
+				ex->radius = 3;
+				ex->color = PINK;
+				this->append(ex);
 		}
 	}
 
