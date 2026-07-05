@@ -58,6 +58,19 @@ int killPlayer(Mob &mob, int dir) {
 // 			}
 // }
 
+void openDoor() {
+	int count = 0;
+	for (auto c : scene.children) {
+		if (dynamic_pointer_cast<Wizzard>(c))  continue;
+		if (dynamic_pointer_cast<Mob>(c))  count++;
+	}
+	if (count > 0)  return;
+	for (int y = 0; y < tmap->theight; y++)
+	for (int x = 0; x < tmap->twidth; x++)
+		if (tmap->at(x, y).tile == 16)
+			tmap->set(x, y, 0, 0);
+}
+
 void mainloop() {
 	auto box1 = make_shared<ShapeRectangle>();
 		box1->x = box1->y = 10;
@@ -94,7 +107,10 @@ void mainloop() {
 	while (!gfx.shouldQuit()) {
 		if (state == "wwalk") {
 			// animate player moving
-			if (wizzard->state == "idle") state = "ewalkstart";
+			if (wizzard->state == "idle") {
+				openDoor();
+				state = "ewalkstart";
+			}
 		}
 		if (state == "ewalkstart") {
 			// move enemies

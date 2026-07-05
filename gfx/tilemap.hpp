@@ -67,4 +67,11 @@ struct TileMap : Paintable {
 			return { 0, 0 };
 		return { data[ty*twidth+tx], cdata[ty*twidth+tx] };
 	}
+
+	void set(int tx, int ty, int tile, int collide) {
+		if (tx < 0 || ty < 0 || tx >= twidth || ty >= theight)
+			return;
+		data [ty*twidth+tx] = tile;
+		cdata[ty*twidth+tx] = collide;
+	}
 };
