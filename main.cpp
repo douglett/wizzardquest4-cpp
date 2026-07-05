@@ -3,10 +3,11 @@
 
 GFX gfx;
 Container scene;
-shared_ptr<TileMap> tmap;
-shared_ptr<Explosion> explosion;
 Texture2D textureSprites;
 Texture2D textureTiles;
+shared_ptr<TileMap> tmap;
+shared_ptr<Wizzard> wizzard;
+shared_ptr<Explosion> explosion;
 
 void  mainloop();
 
@@ -26,7 +27,7 @@ int collideMap(Mob &mob, int dir) {
 void killMob(int tx, int ty, int dir) {
 	auto r = gfx.dir2point(dir);
 	for (auto c : scene.children) {
-		if (auto m = static_pointer_cast<Mob>(c)) {
+		if (auto m = dynamic_pointer_cast<Mob>(c)) {
 			if (m->tx() == tx+r.x && m->ty() == ty+r.y) {
 				m->kill();
 				scene.remove(m);
@@ -36,11 +37,24 @@ void killMob(int tx, int ty, int dir) {
 	}
 }
 
-// void clearDead() {
-// 	for (auto c : scene.children)
-// 		if (auto m = static_pointer_cast<Mob>(c); !m->alive)
-// 			scene.remove(m);
-// }
+int killPlayer(Mob &mob, int dir) {
+	auto r = gfx.dir2point(dir);
+	if (mob.tx()+r.x == wizzard->tx() && mob.ty()+r.y == wizzard->ty()) {
+		wizzard->kill();
+		explosion->spawn(wizzard->tx(), wizzard->ty());
+		return true;
+	}
+	return false;
+}
+
+void clearDead() {
+	for (auto c : scene.children)
+		if (auto m = dynamic_pointer_cast<Mob>(c))
+			if (!m->alive) {
+				printf("removing: %s\n", m->id.c_str());
+				scene.remove(m);
+			}
+}
 
 void mainloop() {
 	auto box1 = make_shared<ShapeRectangle>();
@@ -56,17 +70,17 @@ void mainloop() {
 		tmap->texture = textureTiles;
 		scene.append(tmap);
 
-	auto wizzard = make_shared<Wizzard>();
+	wizzard = make_shared<Wizzard>();
 		wizzard->tpos(1, 1);
 		scene.append(wizzard);
-
-	auto slime = make_shared<Slime>();
-		slime->tpos(3, 1);
-		scene.append(slime);
 
 	explosion = make_shared<Explosion>();
 		// explosion->spawn(3, 3);
 		scene.append(explosion);
+
+	auto slime = make_shared<Slime>();
+		slime->tpos(3, 1);
+		scene.append(slime);
 
 	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
 	scene.y = (gfx.screen.height - tmap->theight*tmap->tsize) / 2;
@@ -98,6 +112,7 @@ void mainloop() {
 		}
 
 		scene.update();
+		clearDead();
 		scene.paint(0, 0);
 		gfx.flip();
 	}

@@ -47,6 +47,7 @@ struct Explosion : Container {
 	bool visible = false;
 
 	Explosion() {
+		id = "explosion";
 		for (int i = 0; i < 4; i++) {
 			auto box = make_shared<ShapeCircle>();
 			box->radius = 3;
