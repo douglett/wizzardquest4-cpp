@@ -3,6 +3,7 @@
 
 struct Mob : Sprite {
 	int dir = -1, step = 0;
+	bool alive = true;
 
 	Mob() {
 		id = "mob";
@@ -15,6 +16,7 @@ struct Mob : Sprite {
 
 	void kill() {
 		printf("kill %lld\n", (size_t)this);
+		alive = false;
 	}
 
 	virtual void update() {
@@ -37,5 +39,44 @@ struct Slime : Mob {
 struct Wizzard : Mob {
 	Wizzard() {
 		id = "wizzard";
+	}
+};
+
+struct Explosion : Container {
+	int tsize = 16, step = 0;
+	bool visible = false;
+
+	Explosion() {
+		for (int i = 0; i < 4; i++) {
+			auto box = make_shared<ShapeCircle>();
+			box->radius = 3;
+			this->append(box);
+		}
+	}
+
+	void spawn(int tx, int ty) {
+		x = tx * tsize;
+		y = ty * tsize;
+		step = 0;
+		visible = true;
+		for (auto c : children)
+			c->x = c->y = tsize/2;
+	}
+
+	virtual void update() {
+		if (step > tsize*3)  visible = false;
+		if (!visible)   return;
+		for (int i = 0; i < 4; i++) {
+			auto r = gfx.dir2point(i);
+			auto c = this->children.at(i);
+			c->x += r.x;
+			c->y += r.y;
+		}
+		step++;
+	}
+
+	virtual void paint(int xoff, int yoff) {
+		if (!visible)  return;
+		Container::paint(xoff, yoff);
 	}
 };

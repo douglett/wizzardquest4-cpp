@@ -4,6 +4,7 @@
 GFX gfx;
 Container scene;
 shared_ptr<TileMap> tmap;
+shared_ptr<Explosion> explosion;
 Texture2D textureSprites;
 Texture2D textureTiles;
 
@@ -29,13 +30,20 @@ void killMob(int tx, int ty, int dir) {
 			if (m->tx() == tx+r.x && m->ty() == ty+r.y) {
 				m->kill();
 				scene.remove(m);
+				explosion->spawn(m->tx(), m->ty());
 			}
 		}
 	}
 }
 
+// void clearDead() {
+// 	for (auto c : scene.children)
+// 		if (auto m = static_pointer_cast<Mob>(c); !m->alive)
+// 			scene.remove(m);
+// }
+
 void mainloop() {
-	auto box1 = make_shared<Shape>();
+	auto box1 = make_shared<ShapeRectangle>();
 		box1->x = box1->y = 10;
 		box1->width = box1->height = 40;
 		box1->color = RED;
@@ -55,6 +63,10 @@ void mainloop() {
 	auto slime = make_shared<Slime>();
 		slime->tpos(3, 1);
 		scene.append(slime);
+
+	explosion = make_shared<Explosion>();
+		// explosion->spawn(3, 3);
+		scene.append(explosion);
 
 	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
 	scene.y = (gfx.screen.height - tmap->theight*tmap->tsize) / 2;
