@@ -3,7 +3,7 @@
 
 struct Mob : Sprite {
 	string state = "idle";
-	int dir = 2, step = 0;
+	int dir = 2, step = 0, dist = 1;
 	bool alive = true;
 
 	Mob() {
@@ -13,7 +13,12 @@ struct Mob : Sprite {
 	}
 
 	void face(int wdir) { dir = tile = wdir; }
-	void walk(int wdir) { dir = wdir, step = 0, state = "walk"; }
+	
+	void walk(int wdir, int mdist=1) {
+		state = "walk";
+		dir = wdir, step = 0;
+		dist = mdist;
+	}
 
 	void kill() {
 		printf("kill: %s, %lld\n", id.c_str(), (size_t)this);
@@ -23,7 +28,7 @@ struct Mob : Sprite {
 	virtual void update() {
 		if (state != "walk")  return;
 		tile = dir;
-		auto p = GFX::dir2point(dir);
+		auto p = GFX::dir2point(dir, dist);
 		x += p.x, y += p.y;
 		step++;
 		if (step >= tsize)

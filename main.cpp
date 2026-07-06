@@ -18,17 +18,21 @@ int main() {
 	gfx.destroy();
 }
 
-int collideMap(Mob &mob, int dir) {
+int collideMap(Mob &mob, int dir, int dist) {
 	// map collision
-	auto r = gfx.dir2point(dir);
-	return tmap->at(mob.tx() + r.x, mob.ty() + r.y).collision;
+	for (int d = 1; d <= dist; d++) {
+		auto r = gfx.dir2point(dir, d);
+		auto c = tmap->at(mob.tx() + r.x, mob.ty() + r.y).collision;
+		if (c) return c;
+	}
+	return 0;
 }
 
-void killMob(int dir) {
-	auto r = gfx.dir2point(dir);
+void killMob(int dir, int dist) {
+	auto r = gfx.dir2point(dir, dist);
 	for (auto c : scene.children) {
 		if (auto m = dynamic_pointer_cast<Enemy>(c)) {
-			if (m->tx() == wizzard->tx()+r.x && m->ty() == wizzard->ty()+r.y) {
+			if (wizzard->tx()+r.x == m->tx() && wizzard->ty()+r.y == m->ty()) {
 				m->kill();
 				scene.remove(m);
 				explosion->spawn(m->tx(), m->ty());
@@ -37,10 +41,10 @@ void killMob(int dir) {
 	}
 }
 
-int killPlayer(Mob &mob, int dir) {
-	auto r = gfx.dir2point(dir);
+int killPlayer(Mob &mob, int dir, int dist) {
+	auto r = gfx.dir2point(dir, dist);
 	if (mob.tx()+r.x == wizzard->tx() && mob.ty()+r.y == wizzard->ty()) {
-		mob.walk(mob.dir);
+		mob.walk(mob.dir, dist);
 		wizzard->kill();
 		scene.remove(wizzard);
 		explosion->spawn(wizzard->tx(), wizzard->ty());
@@ -94,10 +98,12 @@ void mainloop() {
 		// explosion->spawn(3, 3);
 		scene.append(explosion);
 
-	auto slime = make_shared<Slime>();
-		slime->tpos(3, 1);
-		// slime->face(3);
-		scene.append(slime);
+	for (int i = 0; i < 3; i++) {
+		auto slime = make_shared<Slime>();
+			slime->tpos(3, 1+i*2);
+			// slime->face(3);
+			scene.append(slime);
+	}
 
 	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
 	scene.y = (gfx.screen.height - tmap->theight*tmap->tsize) / 2;
@@ -116,7 +122,7 @@ void mainloop() {
 			// move enemies
 			for (auto c : scene.children)
 				if (auto m = dynamic_pointer_cast<Slime>(c))
-					killPlayer(*m, m->dir);
+					killPlayer(*m, m->dir, 2);
 			state = "ewalk";
 		}
 		if (state == "ewalk") {
@@ -137,10 +143,10 @@ void mainloop() {
 			// move animation
 			if (dir > -1) {
 				wizzard->face(dir);
-				if (!collideMap(*wizzard, dir))
-					wizzard->walk(dir),
+				if (!collideMap(*wizzard, dir, 2))
+					wizzard->walk(dir, 2),
 					state = "wwalk",
-					killMob(dir);
+					killMob(dir, 2);
 			}
 		}
 
