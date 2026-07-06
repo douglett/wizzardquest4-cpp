@@ -31,7 +31,9 @@ struct Mob : Sprite {
 	}
 };
 
-struct Slime : Mob {
+struct Enemy : Mob {};
+
+struct Slime : Enemy {
 	Slime() {
 		id = "slime";
 	}

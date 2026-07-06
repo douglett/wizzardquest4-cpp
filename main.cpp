@@ -24,11 +24,11 @@ int collideMap(Mob &mob, int dir) {
 	return tmap->at(mob.tx() + r.x, mob.ty() + r.y).collision;
 }
 
-void killMob(int tx, int ty, int dir) {
+void killMob(int dir) {
 	auto r = gfx.dir2point(dir);
 	for (auto c : scene.children) {
-		if (auto m = dynamic_pointer_cast<Mob>(c)) {
-			if (m->tx() == tx+r.x && m->ty() == ty+r.y) {
+		if (auto m = dynamic_pointer_cast<Enemy>(c)) {
+			if (m->tx() == wizzard->tx()+r.x && m->ty() == wizzard->ty()+r.y) {
 				m->kill();
 				scene.remove(m);
 				explosion->spawn(m->tx(), m->ty());
@@ -96,7 +96,7 @@ void mainloop() {
 
 	auto slime = make_shared<Slime>();
 		slime->tpos(3, 1);
-		slime->face(3);
+		// slime->face(3);
 		scene.append(slime);
 
 	scene.x = (gfx.screen.width  - tmap->twidth*tmap->tsize ) / 2;
@@ -140,7 +140,7 @@ void mainloop() {
 				if (!collideMap(*wizzard, dir))
 					wizzard->walk(dir),
 					state = "wwalk",
-					killMob(wizzard->tx(), wizzard->ty(), dir);
+					killMob(dir);
 			}
 		}
 
