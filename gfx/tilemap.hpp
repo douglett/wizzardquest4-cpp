@@ -23,6 +23,7 @@ struct TileMap : Paintable {
 		// load layers data
 		loadlayer(doc, data,  "map/layer[@name='map']/data");
 		loadlayer(doc, cdata, "map/layer[@name='collision']/data");
+		loadex   (doc);
 		// sanity check
 		if (twidth == 0 || theight == 0 || twidth*theight != (int)data.size() || data.size() != cdata.size())
 			return printf("map parse error\n"), -1;
@@ -46,6 +47,9 @@ struct TileMap : Paintable {
 				ss.clear(), ss.get();
 		// cout << data.size() << endl;
 	}
+
+	// load extra data (override)
+	virtual void loadex(pugi::xml_document& doc) {}
 
 	void paint(int xoff, int yoff) {
 		Color color = { 255, 0, 0, 64 };

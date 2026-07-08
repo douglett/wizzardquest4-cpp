@@ -128,7 +128,7 @@ struct LevelScene {
 		player.paint(x, y);
 		explosions.paint(x, y);
 	}
-	// paint, update, flip
+	// update, paint, flip
 	void xpaint() {
 		update();
 		paint();
