@@ -3,6 +3,7 @@
 #include "mobs.hpp"
 
 struct LevelScene {
+	const int TILE_DOOR = 16, TILE_EXIT = 12;
 	int x = 0, y = 0, tsize = 16;
 	TileMap tmap;
 	Wizzard player;
@@ -27,15 +28,17 @@ struct LevelScene {
 		player.tpos(1, 1);
 	}
 
-	void mainloop() {
+	int mainloop() {
 		while (!gfx.shouldQuit()) {
-			if      (!player.alive)         xpaint();
-			else if (IsKeyDown(KEY_UP))     pwalk(0);
-			else if (IsKeyDown(KEY_RIGHT))  pwalk(1);
-			else if (IsKeyDown(KEY_DOWN))   pwalk(2);
-			else if (IsKeyDown(KEY_LEFT))   pwalk(3);
+			if      (!player.alive)                          return 0;
+			else if (playerOnExit())                         return 1;
+			else if (player.alive && IsKeyDown(KEY_UP))      pwalk(0);
+			else if (player.alive && IsKeyDown(KEY_RIGHT))   pwalk(1);
+			else if (player.alive && IsKeyDown(KEY_DOWN))    pwalk(2);
+			else if (player.alive && IsKeyDown(KEY_LEFT))    pwalk(3);
 			else    xpaint();
 		}
+		return 0;
 	}
 
 	void pwalk(int dir) {
@@ -76,6 +79,13 @@ struct LevelScene {
 		}
 		// update level
 		openDoor();
+		// wait a bit if we are at end of level
+		if (!player.alive || playerOnExit()) {
+			printf("waiting...\n");
+			for (int i = 0; i < 60; i++)
+				xpaint();
+			printf("end.\n");
+		}
 	}
 
 	int collideMap(Mob &mob, int dir, int dist) {
@@ -87,6 +97,10 @@ struct LevelScene {
 		return 0;
 	}
 
+	int playerOnExit() {
+		return tmap.at(player.tx(), player.ty()).tile == TILE_EXIT;
+	}
+
 	void explode(Mob& mob) {
 		explosions.append( make_shared<Explosion>(mob.tx(), mob.ty()) );
 	}
@@ -95,7 +109,7 @@ struct LevelScene {
 		if (mobs.children.size() > 0)  return;
 		for (int y = 0; y < tmap.theight; y++)
 		for (int x = 0; x < tmap.twidth; x++)
-			if (tmap.at(x, y).tile == 16)
+			if (tmap.at(x, y).tile == TILE_DOOR)
 				tmap.set(x, y, 0, 0);
 	}
 
@@ -117,3 +131,12 @@ struct LevelScene {
 		gfx.flip();
 	}
 };
+
+
+// struct Timer {
+// 	int time = 0, tt = 0;
+// 	bool started = false, finished = false;
+// 	void start()   { tt = time, started = true, finished = false; }
+// 	void update()  { if (started &&--tt == 0) finished = true; }
+// 	int  running() { return started && !finished; }
+// };
