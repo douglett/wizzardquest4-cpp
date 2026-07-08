@@ -1,5 +1,5 @@
 #pragma once
-#include "container.hpp"
+#include "paintable.hpp"
 
 struct Sprite : Paintable {
 	int tsize = 16, tile = 0;

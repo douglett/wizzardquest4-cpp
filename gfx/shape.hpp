@@ -1,5 +1,5 @@
 #pragma once
-#include "container.hpp"
+#include "paintable.hpp"
 
 struct Shape : Paintable {
 	Color color = WHITE;
