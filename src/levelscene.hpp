@@ -103,7 +103,7 @@ struct LevelScene {
 	void paint() {
 		tmap.paint(x, y);
 		mobs.paint(x, y);
-		if (player.alive)  player.paint(x, y);
+		player.paint(x, y);
 		explosion.paint(x, y);
 	}
 	// paint, update, flip

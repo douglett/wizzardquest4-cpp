@@ -1,10 +1,10 @@
 #pragma once
 #include "globals.hpp"
+#include <cmath>
 
+// base mob
 struct Mob : Sprite {
-	string state = "idle";
-	int dir = 2, step = 0, dist = 1;
-	bool alive = true;
+	int alive = true, dir = 2;
 
 	Mob() {
 		id = "mob";
@@ -14,80 +14,58 @@ struct Mob : Sprite {
 
 	void init() { texture = textureSprites; }
 	void face(int wdir) { dir = tile = wdir; }
-	
-	void walk(int wdir, int mdist=1) {
-		state = "walk";
-		dir = wdir, step = 0;
-		dist = mdist;
-	}
 
 	void kill() {
 		printf("kill: %s, %lld\n", id.c_str(), (size_t)this);
 		alive = false;
 	}
 
-	virtual void update() {
-		if (state != "walk")  return;
-		tile = dir;
-		auto p = GFX::dir2point(dir, dist);
-		x += p.x, y += p.y;
-		step++;
-		if (step >= tsize)
-			state = "idle", step = 0;
+	virtual void paint(int xoff, int yoff) {
+		if (alive)  Sprite::paint(xoff, yoff);
 	}
 };
 
-struct Enemy : Mob {};
+// player
+struct Wizzard : Mob {
+	Wizzard() { id = "wizzard"; }
+};
+
+// enemies
+struct Enemy : Mob {
+	Enemy() { id = "enemy"; }
+};
 
 struct Slime : Enemy {
-	Slime() {
-		id = "slime";
-	}
+	Slime() { id = "slime"; }
 };
 
-struct Wizzard : Mob {
-	Wizzard() {
-		id = "wizzard";
-	}
-};
+// misc
+struct Explosion : Paintable {
+	int alive = false, tsize = 16, frame = 0;
 
-struct Explosion : Container {
-	int tsize = 16, step = 0;
-	bool visible = false;
-
-	Explosion() {
-		id = "explosion";
-		for (int i = 0; i < 4; i++) {
-			auto ex = make_shared<ShapeCircle>();
-				ex->radius = 3;
-				ex->color = PINK;
-				this->append(ex);
-		}
-	}
+	Explosion() { id = "explosion"; }
 
 	void spawn(int tx, int ty) {
-		x = tx * tsize;
-		y = ty * tsize;
-		step = 0;
-		visible = true;
-		for (auto c : children)
-			c->x = c->y = tsize/2;
+		x = tx*tsize, y = ty*tsize;
+		frame = 0;
+		alive = true;
 	}
 
 	virtual void update() {
-		if (step > tsize*3)  visible = false;
-		if (!visible)   return;
-		for (int i = 0; i < 4; i++) {
-			auto r = gfx.dir2point(i);
-			auto c = this->children.at(i);
-			c->x += r.x;
-			c->y += r.y;
-		}
-		step++;
+		if (!alive)  return;
+		frame++;
+		if (frame > tsize*3)  alive = false;
 	}
 
 	virtual void paint(int xoff, int yoff) {
-		if (!visible)  return;
-		Container::paint(xoff, yoff);
+		if (!alive)  return;
+		auto col = PINK; // base color
+		col.a = min((1 - (double(frame) / (tsize*3))) * 2 * 255, 255.0); // fade out at the end
+		int c = tsize/2; // center
+		for (int i = 0; i < 8; i++) {
+			int xx = cos(numbers::pi * 2 / 8 * i) * frame;
+			int yy = sin(numbers::pi * 2 / 8 * i) * frame;
+			DrawCircle(xoff+x+c+xx, yoff+y+c+yy, 3, col);
+		}
 	}
 };
