@@ -116,6 +116,10 @@ struct LevelScene {
 	// background actions update
 	void update() {
 		explosions.update();
+		for (auto c : explosions.children)
+			if (auto ex = dynamic_pointer_cast<Explosion>(c))
+				if (!ex->alive)
+					explosions.remove(ex);
 	}
 	// repaint all
 	void paint() {
