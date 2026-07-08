@@ -41,14 +41,11 @@ struct Slime : Enemy {
 
 // misc
 struct Explosion : Paintable {
-	int alive = false, tsize = 16, frame = 0;
+	int alive = true, tsize = 16, frame = 0;
 
-	Explosion() { id = "explosion"; }
-
-	void spawn(int tx, int ty) {
+	Explosion(int tx, int ty) {
+		id = "explosion";
 		x = tx*tsize, y = ty*tsize;
-		frame = 0;
-		alive = true;
 	}
 
 	virtual void update() {

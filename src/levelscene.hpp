@@ -5,9 +5,9 @@
 struct LevelScene {
 	int x = 0, y = 0, tsize = 16;
 	TileMap tmap;
-	Container mobs;
 	Wizzard player;
-	Explosion explosion;
+	Container mobs;
+	Container explosions;
 
 	void init() {
 		tmap.load("../wizzardquest4/assets/level1.tmx");
@@ -49,7 +49,7 @@ struct LevelScene {
 				if (player.tx()+r.x == m->tx() && player.ty()+r.y == m->ty()) {
 					m->kill();
 					mobs.remove(m);
-					explosion.spawn(m->tx(), m->ty());
+					explode(*m);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ struct LevelScene {
 				if (mob->tx()+r.x == player.tx() && mob->ty()+r.y == player.ty()) {
 					// on collision, walk mob and play explosion animation
 					player.kill();
-					explosion.spawn(player.tx(), player.ty());
+					explode(player);
 					for (int i = 0; i < tsize; i++) {
 						mob->x += r.x, mob->y += r.y;
 						xpaint();
@@ -78,14 +78,6 @@ struct LevelScene {
 		openDoor();
 	}
 
-	void openDoor() {
-		if (mobs.children.size() > 0)  return;
-		for (int y = 0; y < tmap.theight; y++)
-		for (int x = 0; x < tmap.twidth; x++)
-			if (tmap.at(x, y).tile == 16)
-				tmap.set(x, y, 0, 0);
-	}
-
 	int collideMap(Mob &mob, int dir, int dist) {
 		for (int d = 1; d <= dist; d++) {
 			auto r = gfx.dir2point(dir, d);
@@ -95,16 +87,28 @@ struct LevelScene {
 		return 0;
 	}
 
+	void explode(Mob& mob) {
+		explosions.append( make_shared<Explosion>(mob.tx(), mob.ty()) );
+	}
+
+	void openDoor() {
+		if (mobs.children.size() > 0)  return;
+		for (int y = 0; y < tmap.theight; y++)
+		for (int x = 0; x < tmap.twidth; x++)
+			if (tmap.at(x, y).tile == 16)
+				tmap.set(x, y, 0, 0);
+	}
+
 	// background actions update
 	void update() {
-		explosion.update();
+		explosions.update();
 	}
 	// repaint all
 	void paint() {
 		tmap.paint(x, y);
 		mobs.paint(x, y);
 		player.paint(x, y);
-		explosion.paint(x, y);
+		explosions.paint(x, y);
 	}
 	// paint, update, flip
 	void xpaint() {
