@@ -40,8 +40,8 @@ struct LevelScene {
 
 	void pwalk(int dir) {
 		player.face(dir);
-		if (collideMap(player, dir, 2))  return;
-		printf("move\n");
+		if (collideMap(player, dir, 2))
+			return xpaint(); // paint at least one frame
 		// kill any mobs in this direction
 		auto r = gfx.dir2point(dir, 2);
 		for (auto c : mobs.children) {
