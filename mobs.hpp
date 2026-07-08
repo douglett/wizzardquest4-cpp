@@ -12,6 +12,7 @@ struct Mob : Sprite {
 		face(dir);
 	}
 
+	void init() { texture = textureSprites; }
 	void face(int wdir) { dir = tile = wdir; }
 	
 	void walk(int wdir, int mdist=1) {
