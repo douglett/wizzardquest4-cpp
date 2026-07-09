@@ -11,7 +11,7 @@ struct LevelScene {
 	Container explosions;
 
 	void init() {
-		tmap.load("../wizzardquest4/assets/level1.tmx");
+		tmap.load("assets/level1.tmx");
 		tmap.texture = textureTiles;
 		// tmap.debug = true;
 		x = (gfx.screen.width  - tmap.twidth*tsize ) / 2;

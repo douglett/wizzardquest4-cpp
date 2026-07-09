@@ -14,8 +14,8 @@ int main() {
 	printf("starting WizzardQuest 4!\n");
 	gfx.init();
 
-	textureSprites = LoadTexture("../wizzardquest4/assets/sprites.png");
-	textureTiles   = LoadTexture("../wizzardquest4/assets/monotiles.png");
+	textureSprites = LoadTexture("assets/sprites.png");
+	textureTiles   = LoadTexture("assets/monotiles.png");
 	level.init();
 	level.mainloop();
 
