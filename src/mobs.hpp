@@ -21,7 +21,10 @@ struct Mob : Sprite {
 	}
 
 	virtual void paint(int xoff, int yoff) {
-		if (alive)  Sprite::paint(xoff, yoff);
+		if (!alive)  return;
+		auto r = gfx.dir2point(dir, tsize);
+		gfx.blitt(textureExtras, tsize, 1+dir, xoff+x+r.x, yoff+y+r.y);
+		Sprite::paint(xoff, yoff);
 	}
 };
 

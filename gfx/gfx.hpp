@@ -17,6 +17,10 @@ struct GFX {
 	void begin()   { screen.begin(); }
 	void flip()    { screen.flip(); }
 
+	void blitt(Texture2D texture, int tsize, int tile, int x, int y) {
+		screen.blitt(texture, tsize, tile, x, y);
+	}
+
 	// helpers
 	static bool shouldQuit() { return WindowShouldClose(); }
 
