@@ -4,7 +4,7 @@
 
 // base mob
 struct Mob : Sprite {
-	int alive = true, dir = 2;
+	int alive = true, basetile = 0, dir = 2;
 
 	Mob() {
 		id = "mob";
@@ -13,7 +13,7 @@ struct Mob : Sprite {
 	}
 
 	void init() { texture = textureSprites; }
-	void face(int wdir) { dir = tile = wdir; }
+	void face(int mdir) { dir = mdir; tile = basetile + dir; }
 
 	void kill() {
 		printf("kill: %s, %lld\n", id.c_str(), (size_t)this);
@@ -40,7 +40,7 @@ struct Slime : Enemy {
 };
 
 struct Guard : Enemy {
-	Guard() { id = "guard"; }
+	Guard() { id = "guard"; basetile = 4; }
 };
 
 // misc
