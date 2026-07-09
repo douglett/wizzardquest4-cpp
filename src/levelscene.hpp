@@ -13,22 +13,25 @@ struct LevelScene {
 	void init() {
 		tmap.load("assets/level1.tmx");
 		tmap.texture = textureTiles;
+		tmap.boundscollide = 1;
 		// tmap.debug = true;
 		x = (gfx.screen.width  - tmap.twidth*tsize ) / 2;
 		y = (gfx.screen.height - tmap.theight*tsize) / 2;
 
 		auto slime = make_shared<Slime>();
-			slime->tpos(3, 1);
+			slime->tpos(4, 3);
+			slime->face(1);
 			mobs.append(slime);
 
-		auto guard = make_shared<Guard>();
-			guard->tpos(3, 5);
-			// guard->tpos(1, 5);
-			guard->face(1);
-			mobs.append(guard);
+		// auto guard = make_shared<Guard>();
+		// 	guard->tpos(3, 5);
+		// 	// guard->tpos(1, 5);
+		// 	guard->face(1);
+		// 	mobs.append(guard);
 
 		player.init();
-		player.tpos(1, 1);
+		player.tpos(0, 3);
+		player.face(1);
 	}
 
 	int mainloop() {

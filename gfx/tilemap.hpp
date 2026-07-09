@@ -8,7 +8,7 @@ struct TileMap : Paintable {
 	int twidth = 0, theight = 0, tsize = 16;
 	vector<int> data, cdata;
 	Texture2D texture;
-	bool debug = false;
+	int debug = false, boundscollide = 0;
 
 	int load(const string& fname) {
 		// open doc
@@ -68,7 +68,7 @@ struct TileMap : Paintable {
 
 	tiledata at(int tx, int ty) {
 		if (tx < 0 || ty < 0 || tx >= twidth || ty >= theight)
-			return { 0, 0 };
+			return { 0, boundscollide };
 		return { data[ty*twidth+tx], cdata[ty*twidth+tx] };
 	}
 
