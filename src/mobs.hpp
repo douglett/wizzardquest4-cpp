@@ -39,6 +39,10 @@ struct Slime : Enemy {
 	Slime() { id = "slime"; }
 };
 
+struct Guard : Enemy {
+	Guard() { id = "guard"; }
+};
+
 // misc
 struct Explosion : Paintable {
 	int alive = true, tsize = 16, frame = 0;

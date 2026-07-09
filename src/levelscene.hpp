@@ -17,12 +17,15 @@ struct LevelScene {
 		x = (gfx.screen.width  - tmap.twidth*tsize ) / 2;
 		y = (gfx.screen.height - tmap.theight*tsize) / 2;
 
-		for (int i = 0; i < 3; i++) {
-			auto slime = make_shared<Slime>();
-			slime->tpos(3, 1+i*2);
-			// slime->face(3);
+		auto slime = make_shared<Slime>();
+			slime->tpos(3, 1);
 			mobs.append(slime);
-		}
+
+		auto guard = make_shared<Guard>();
+			guard->tpos(3, 5);
+			// guard->tpos(1, 5);
+			guard->face(1);
+			mobs.append(guard);
 
 		player.init();
 		player.tpos(1, 1);
@@ -64,16 +67,34 @@ struct LevelScene {
 		}
 		// walk mobs (one at a time)
 		for (auto c : mobs.children) {
-			if (auto mob = dynamic_pointer_cast<Enemy>(c)) {
+			// slime - static unless player is in front
+			if (auto mob = dynamic_pointer_cast<Slime>(c)) {
+				// on collision, walk mob and play explosion animation
 				r = gfx.dir2point(mob->dir, 2);
 				if (mob->tx()+r.x == player.tx() && mob->ty()+r.y == player.ty()) {
-					// on collision, walk mob and play explosion animation
 					player.kill();
 					explode(player);
 					for (int i = 0; i < tsize; i++) {
 						mob->x += r.x, mob->y += r.y;
 						xpaint();
 					}
+				}
+			}
+			// guard - patrol
+			else if (auto mob = dynamic_pointer_cast<Guard>(c)) {
+				// on collision, walk mob and play explosion animation
+				r = gfx.dir2point(mob->dir, 2);
+				if (mob->tx()+r.x == player.tx() && mob->ty()+r.y == player.ty()) {
+					player.kill();
+					explode(player);
+				}
+				if (!collideMap(*mob, mob->dir, 2)) {
+					for (int i = 0; i < tsize; i++) {
+						mob->x += r.x, mob->y += r.y;
+						xpaint();
+					}
+					if (collideMap(*mob, mob->dir, 2))
+						mob->face((mob->dir + 2) % 4);
 				}
 			}
 		}
