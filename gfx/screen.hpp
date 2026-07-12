@@ -54,4 +54,14 @@ struct Screen {
 		Vector2   dst{ float(x), float(y) };
 		DrawTextureRec(texture, src, dst, WHITE);
 	}
+
+	static void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot) {
+		int tx = tile % (texture.width / tsize);
+		int ty = tile / (texture.width / tsize);
+		float t = tsize;
+		Rectangle src{ tx*t, ty*t, t, t };
+		Vector2   ori{ float(tsize) / 2, float(tsize) / 2 };
+		Rectangle dst{ x+ori.x, y+ori.y, float(tsize), float(tsize) };
+		DrawTexturePro(texture, src, dst, ori, rot, WHITE);
+	}
 };

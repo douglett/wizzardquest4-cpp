@@ -21,6 +21,10 @@ struct GFX {
 		screen.blitt(texture, tsize, tile, x, y);
 	}
 
+	void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot) {
+		screen.blittr(texture, tsize, tile, x, y, rot);
+	}
+
 	// helpers
 	static bool shouldQuit() { return WindowShouldClose(); }
 
@@ -32,5 +36,9 @@ struct GFX {
 			case 3:   return { -d,  0 };
 			default:  return {  0,  0 };
 		}
+	}
+
+	static float dir2rot(int dir) {
+		return 360.0 / 4 * dir;
 	}
 };

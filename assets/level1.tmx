@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="5">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="8">
  <tileset firstgid="1" name="monotiles" tilewidth="16" tileheight="16" tilecount="32" columns="8">
   <image source="monotiles.png" width="128" height="64"/>
  </tileset>
- <tileset firstgid="33" name="collision" tilewidth="16" tileheight="16" tilecount="2" columns="2">
-  <image source="collision.png" width="32" height="16"/>
+ <tileset firstgid="33" name="sprites2" tilewidth="16" tileheight="16" tilecount="8" columns="4">
+  <image source="sprites2.png" width="64" height="32"/>
  </tileset>
  <layer id="1" name="map" width="7" height="7">
   <data encoding="csv">
-14,14,14,14,14,14,14,
-14,14,14,0,14,0,14,
-0,14,0,14,0,0,0,
-22,17,19,17,19,16,12,
-0,0,14,0,0,0,0,
-0,14,0,0,0,14,0,
-14,14,14,14,14,14,14
+15,15,15,15,15,15,15,
+15,15,15,0,15,0,15,
+0,15,0,15,0,0,0,
+23,18,20,18,20,17,13,
+0,0,15,0,0,0,0,
+0,15,0,0,0,15,0,
+15,15,15,15,15,15,15
 </data>
  </layer>
  <layer id="2" name="collision" width="7" height="7">
   <data encoding="csv">
 0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,
-33,33,33,33,33,33,33,
-0,0,0,0,0,33,0,
-33,33,33,33,33,33,33,
+2,2,2,2,2,2,2,
+0,0,0,0,0,0,0,
+2,2,2,2,2,2,2,
 0,0,0,0,0,0,0,
 0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="6" name="mobs">
+  <object id="5" gid="33" x="64" y="64" width="16" height="16">
+   <properties>
+    <property name="dir" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="6" gid="34" x="0" y="64" width="16" height="16">
+   <properties>
+    <property name="dir" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

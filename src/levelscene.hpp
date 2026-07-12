@@ -3,7 +3,7 @@
 #include "mobs.hpp"
 
 struct LevelScene {
-	const int TILE_DOOR = 16, TILE_EXIT = 12;
+	const int TILE_DOOR = 17, TILE_EXIT = 13;
 	int x = 0, y = 0, tsize = 16;
 	TileMap tmap;
 	Wizzard player;
