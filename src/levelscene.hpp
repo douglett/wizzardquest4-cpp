@@ -1,11 +1,12 @@
 #pragma once
 #include "globals.hpp"
 #include "mobs.hpp"
+#include "tilemapex.hpp"
 
 struct LevelScene {
 	const int TILE_DOOR = 17, TILE_EXIT = 13;
 	int x = 0, y = 0, tsize = 16;
-	TileMap tmap;
+	TileMapEx tmap;
 	Wizzard player;
 	Container mobs;
 	Container explosions;
@@ -18,20 +19,20 @@ struct LevelScene {
 		x = (gfx.screen.width  - tmap.twidth*tsize ) / 2;
 		y = (gfx.screen.height - tmap.theight*tsize) / 2;
 
-		auto slime = make_shared<Slime>();
-			slime->tpos(4, 3);
-			slime->face(1);
-			mobs.append(slime);
-
-		// auto guard = make_shared<Guard>();
-		// 	guard->tpos(3, 5);
-		// 	// guard->tpos(1, 5);
-		// 	guard->face(1);
-		// 	mobs.append(guard);
-
 		player.init();
-		player.tpos(0, 3);
-		player.face(1);
+
+		for (auto m : tmap.mobs)
+			if (m.type == "slime") {
+				auto mob = make_shared<Slime>();
+				mob->tpos(m.tx, m.ty);
+				mob->face(m.dir);
+				mobs.append(mob);
+			} else if (m.type == "wizzard") {
+				player.tpos(m.tx, m.ty);
+				player.face(m.dir);
+			} else {
+				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
+			}
 	}
 
 	int mainloop() {

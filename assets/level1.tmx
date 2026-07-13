@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="8">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="7" height="7" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="12">
  <tileset firstgid="1" name="monotiles" tilewidth="16" tileheight="16" tilecount="32" columns="8">
   <image source="monotiles.png" width="128" height="64"/>
  </tileset>
@@ -29,12 +29,12 @@
 </data>
  </layer>
  <objectgroup id="6" name="mobs">
-  <object id="5" gid="33" x="64" y="64" width="16" height="16">
+  <object id="5" type="slime" gid="33" x="64" y="64" width="16" height="16">
    <properties>
     <property name="dir" type="int" value="1"/>
    </properties>
   </object>
-  <object id="6" gid="34" x="0" y="64" width="16" height="16">
+  <object id="6" type="wizzard" gid="34" x="0" y="64" width="16" height="16">
    <properties>
     <property name="dir" type="int" value="1"/>
    </properties>
