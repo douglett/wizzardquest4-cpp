@@ -4,7 +4,7 @@
 #include "tilemapex.hpp"
 
 struct LevelScene {
-	const int TILE_DOOR = 17, TILE_EXIT = 13;
+	const int TILE_DOOR = 17, TILE_EXIT = 13, TILE_PATHH = 18, TILE_PATHV = 19;
 	int x = 0, y = 0, tsize = 16;
 	TileMapEx tmap;
 	Wizzard player;
@@ -134,8 +134,14 @@ struct LevelScene {
 		if (mobs.children.size() > 0)  return;
 		for (int y = 0; y < tmap.theight; y++)
 		for (int x = 0; x < tmap.twidth; x++)
-			if (tmap.at(x, y).tile == TILE_DOOR)
-				tmap.set(x, y, 0, 0);
+			if (tmap.at(x, y).tile == TILE_DOOR) {
+				if (tmap.at(x, y-1).tile == TILE_EXIT || tmap.at(x, y+1).tile == TILE_EXIT)
+					tmap.set(x, y, TILE_PATHV, 0);
+				else if (tmap.at(x-1, y).tile == TILE_EXIT || tmap.at(x+1, y).tile == TILE_EXIT)
+					tmap.set(x, y, TILE_PATHH, 0);
+				else
+					tmap.set(x, y, 0, 0);	
+			}
 	}
 
 	// background actions update
