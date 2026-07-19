@@ -45,6 +45,10 @@ struct Screen {
 		begin();
 	}
 
+	static void text(const string& str, int x, int y, Color col=WHITE) {
+		DrawText(str.c_str(), x, y, 10, col);
+	}
+
 	// blit texture
 	static void blitt(Texture2D texture, int tsize, int tile, int x, int y) {
 		int tx = tile % (texture.width / tsize);

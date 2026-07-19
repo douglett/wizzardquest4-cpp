@@ -17,6 +17,10 @@ struct GFX {
 	void begin()   { screen.begin(); }
 	void flip()    { screen.flip(); }
 
+	void text(const string& str, int x, int y, Color col=WHITE) {
+		screen.text(str, x, y, col);
+	}
+
 	void blitt(Texture2D texture, int tsize, int tile, int x, int y) {
 		screen.blitt(texture, tsize, tile, x, y);
 	}

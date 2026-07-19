@@ -10,6 +10,7 @@ struct LevelScene {
 	Wizzard player;
 	Container mobs;
 	Container explosions;
+	string lvlname;
 
 	int load(int levelno, const string& fname, const string& name) {
 		// reset scene
@@ -38,6 +39,8 @@ struct LevelScene {
 			} else {
 				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
 			}
+
+		lvlname = to_string(levelno) + " - " +name;
 		return 1;
 	}
 
@@ -164,6 +167,7 @@ struct LevelScene {
 		mobs.paint(x, y);
 		player.paint(x, y);
 		explosions.paint(x, y);
+		gfx.text(lvlname, 1, gfx.screen.height - 10, GREEN);
 	}
 	// update, paint, flip
 	void xpaint() {
