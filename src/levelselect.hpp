@@ -15,12 +15,12 @@ struct LevelSelect {
 	void allLevels() {
 		while (levelno >= 1 && levelno < (int)levelinfo.size()) {
 			auto& lvl = levelinfo.at(levelno);
-			if (level.load(levelno, lvl.fname, lvl.name))  return;  // abort on error
+			if (!level.load(levelno, lvl.fname, lvl.name))  return;  // abort on error
 			int result = level.mainloop();
 			switch (result) {
-				case -1:  return;  // quit
-				case  0:  break;   // death - retry
-				case  1:  levelno++;  break;  // next level on win
+				case 0:  return;  // quit
+				case 1:  break;   // death - retry
+				case 2:  levelno++;  break;  // next level on win
 			}
 		}
 	}

@@ -18,7 +18,7 @@ struct LevelScene {
 		player.alive = true;
 		
 		// load
-		if (tmap.load("assets/"+fname))  return -1;
+		if (!tmap.load("assets/"+fname))  return 0;
 		tmap.texture = textureTiles;
 		tmap.boundscollide = 1;
 		// tmap.debug = true;
@@ -38,20 +38,20 @@ struct LevelScene {
 			} else {
 				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
 			}
-		return 0;
+		return 1;
 	}
 
 	int mainloop() {
 		while (!gfx.shouldQuit()) {
-			if      (!player.alive)                          return 0;
-			else if (playerOnExit())                         return 1;
+			if      (!player.alive)                          return 1;
+			else if (playerOnExit())                         return 2;
 			else if (player.alive && IsKeyDown(KEY_UP))      pwalk(0);
 			else if (player.alive && IsKeyDown(KEY_RIGHT))   pwalk(1);
 			else if (player.alive && IsKeyDown(KEY_DOWN))    pwalk(2);
 			else if (player.alive && IsKeyDown(KEY_LEFT))    pwalk(3);
 			else    xpaint();
 		}
-		return -1;
+		return 0;
 	}
 
 	void pwalk(int dir) {

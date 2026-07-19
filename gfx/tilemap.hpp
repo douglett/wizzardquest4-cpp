@@ -17,7 +17,7 @@ struct TileMap : Paintable {
 		pugi::xml_document doc;
 		auto result = doc.load_file(fname.c_str());
 		if (!result)
-			return fprintf(stderr, "map xml load failed: %s\n", result.description()), -1;
+			return fprintf(stderr, "map xml load failed: %s\n", result.description()), 0;
 		// load data
 		twidth  = doc.child("map").attribute("width").as_int();
 		theight = doc.child("map").attribute("height").as_int();
@@ -30,7 +30,7 @@ struct TileMap : Paintable {
 			return printf("map parse error\n"), -1;
 		// ok
 		printf("map loaded '%s': w: %d, h: %d\n", fname.c_str(), twidth, theight);
-		return 0;
+		return 1;
 	}
 
 	virtual void reset() {
