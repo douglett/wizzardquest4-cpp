@@ -43,8 +43,8 @@ struct Slime : Enemy {
 	Slime() { id = "slime"; tile = 0; }
 };
 
-struct Guard : Enemy {
-	Guard() { id = "guard"; tile = 3; }
+struct Bear : Enemy {
+	Bear() { id = "bear"; tile = 3; }
 };
 
 struct Archer : Enemy {

@@ -9,8 +9,9 @@ struct LevelSelect {
 		{ "level1.tmx", "Walk Right" },
 		{ "level2.tmx", "Walk Right?" },
 		{ "level3.tmx", "Don't Be Hasty" },
+		{ "level4.tmx", "Bear in the Woods" },
 	};
-	int levelno = 3;
+	int levelno = 4;
 	LevelScene level;
 
 	void allLevels() {

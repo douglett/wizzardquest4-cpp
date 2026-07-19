@@ -28,14 +28,19 @@ struct LevelScene {
 
 		// init mobs
 		for (auto m : tmap.mobs)
-			if (m.type == "slime") {
+			if (m.type == "wizzard") {
+				player.tpos(m.tx, m.ty);
+				player.face(m.dir);
+			} else if (m.type == "slime") {
 				auto mob = make_shared<Slime>();
 				mob->tpos(m.tx, m.ty);
 				mob->face(m.dir);
 				mobs.append(mob);
-			} else if (m.type == "wizzard") {
-				player.tpos(m.tx, m.ty);
-				player.face(m.dir);
+			} else if (m.type == "bear") {
+				auto mob = make_shared<Bear>();
+				mob->tpos(m.tx, m.ty);
+				mob->face(m.dir);
+				mobs.append(mob);
 			} else {
 				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
 			}
@@ -45,8 +50,10 @@ struct LevelScene {
 	}
 
 	int mainloop() {
+		xpaint();
 		while (!gfx.shouldQuit()) {
 			if      (!player.alive)                          return 1;
+			else if (IsKeyPressed(KEY_R))                    return 1;
 			else if (playerOnExit())                         return 2;
 			else if (player.alive && IsKeyDown(KEY_UP))      pwalk(0);
 			else if (player.alive && IsKeyDown(KEY_RIGHT))   pwalk(1);
@@ -93,8 +100,8 @@ struct LevelScene {
 					}
 				}
 			}
-			// guard - patrol
-			else if (auto mob = dynamic_pointer_cast<Guard>(c)) {
+			// bear - guard patrol
+			else if (auto mob = dynamic_pointer_cast<Bear>(c)) {
 				// on collision, walk mob and play explosion animation
 				r = gfx.dir2point(mob->dir, 2);
 				if (mob->tx()+r.x == player.tx() && mob->ty()+r.y == player.ty()) {
