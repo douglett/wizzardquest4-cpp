@@ -5,6 +5,11 @@ struct TileMapEx : TileMap {
 	struct tmapmob { string type; int tx, ty, dir; };
 	vector<tmapmob> mobs;
 
+	virtual void reset() {
+		TileMap::reset();
+		mobs = {};
+	}
+
 	virtual void loadex(pugi::xml_document& doc) {
 		// grab tileset start offset
 		// auto tset = doc.select_node("map/tileset[@name='sprites2']");

@@ -11,16 +11,21 @@ struct LevelScene {
 	Container mobs;
 	Container explosions;
 
-	void init() {
-		tmap.load("assets/level1.tmx");
+	int load(int levelno, const string& fname, const string& name) {
+		// reset scene
+		mobs = explosions = {};
+		player.init();
+		player.alive = true;
+		
+		// load
+		if (tmap.load("assets/"+fname))  return -1;
 		tmap.texture = textureTiles;
 		tmap.boundscollide = 1;
 		// tmap.debug = true;
 		x = (gfx.screen.width  - tmap.twidth*tsize ) / 2;
 		y = (gfx.screen.height - tmap.theight*tsize) / 2;
 
-		player.init();
-
+		// init mobs
 		for (auto m : tmap.mobs)
 			if (m.type == "slime") {
 				auto mob = make_shared<Slime>();
@@ -33,6 +38,7 @@ struct LevelScene {
 			} else {
 				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
 			}
+		return 0;
 	}
 
 	int mainloop() {
@@ -45,7 +51,7 @@ struct LevelScene {
 			else if (player.alive && IsKeyDown(KEY_LEFT))    pwalk(3);
 			else    xpaint();
 		}
-		return 0;
+		return -1;
 	}
 
 	void pwalk(int dir) {

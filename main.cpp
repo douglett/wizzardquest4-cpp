@@ -1,6 +1,6 @@
 #include <iostream>
 #include "src/globals.hpp"
-#include "src/levelscene.hpp"
+#include "src/levelselect.hpp"
 using namespace std;
 
 // define globals
@@ -10,7 +10,7 @@ Texture2D textureSprites;
 Texture2D textureExtras;
 const Color PAL_BLACK = { 16, 8, 32, 255 };
 // scene selection
-LevelScene level;
+LevelSelect levelselect;
 
 int main() {
 	printf("starting WizzardQuest 4!\n");
@@ -20,8 +20,8 @@ int main() {
 	textureTiles   = LoadTexture("assets/monotiles.png");
 	textureSprites = LoadTexture("assets/sprites2.png");
 	textureExtras  = LoadTexture("assets/extras.png");
-	level.init();
-	level.mainloop();
+	
+	levelselect.allLevels();
 
 	gfx.destroy();
 }

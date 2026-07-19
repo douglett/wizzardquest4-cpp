@@ -11,6 +11,7 @@ struct TileMap : Paintable {
 	int debug = false, boundscollide = 0;
 
 	int load(const string& fname) {
+		reset();
 		// open doc
 		id = fname;
 		pugi::xml_document doc;
@@ -30,6 +31,11 @@ struct TileMap : Paintable {
 		// ok
 		printf("map loaded '%s': w: %d, h: %d\n", fname.c_str(), twidth, theight);
 		return 0;
+	}
+
+	virtual void reset() {
+		twidth = theight = 0;
+		data = cdata = {};
 	}
 
 	void loadlayer(pugi::xml_document& doc, vector<int>& mdata, const string& xpath) {
