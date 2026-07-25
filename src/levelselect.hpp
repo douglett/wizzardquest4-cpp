@@ -7,11 +7,11 @@ struct LevelSelect {
 	const vector<LevelType> levelinfo = {
 		{},
 		{ "sm1.tmx", "Walk Right" },
-		{ "level2.tmx", "Walk Right?" },
-		{ "level3.tmx", "Don't Be Hasty" },
-		{ "level4.tmx", "Bear in the Woods" },
+		{ "sm2.tmx", "Walk Right?" },
+		{ "sm3.tmx", "Don't Be Hasty" },
+		{ "sm4.tmx", "Bear in the Woods" },
 	};
-	int levelno = 1;
+	int levelno = 4;
 	LevelScene level;
 
 	void allLevels() {

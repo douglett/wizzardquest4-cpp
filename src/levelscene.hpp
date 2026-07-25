@@ -132,8 +132,8 @@ struct LevelScene {
 	int collideMap(Mob &mob, int dir, int dist=1) {
 		for (int d = 1; d <= dist; d++) {
 			auto r = gfx.dir2point(dir, d);
-			auto c = tmap.at(mob.tx() + r.x, mob.ty() + r.y).collision;
-			if (c) return c;
+			auto t = tmap.at(mob.tx() + r.x, mob.ty() + r.y).tile;
+			if (t > 0 && t != TILE_EXIT) return t;
 		}
 		return 0;
 	}
