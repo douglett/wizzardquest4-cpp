@@ -66,10 +66,10 @@ struct LevelScene {
 
 	void pwalk(int dir) {
 		player.face(dir);
-		if (collideMap(player, dir, 2))
+		if (collideMap(player, dir))
 			return xpaint(); // paint at least one frame
 		// kill any mobs in this direction
-		auto r = gfx.dir2point(dir, 2);
+		auto r = gfx.dir2point(dir);
 		for (auto c : mobs.children) {
 			if (auto m = dynamic_pointer_cast<Enemy>(c)) {
 				if (player.tx()+r.x == m->tx() && player.ty()+r.y == m->ty()) {
@@ -80,7 +80,7 @@ struct LevelScene {
 			}
 		}
 		// walk player
-		r = gfx.dir2point(dir, 2);
+		r = gfx.dir2point(dir);
 		for (int i = 0; i < tsize; i++) {
 			player.x += r.x, player.y += r.y;
 			xpaint();
@@ -90,7 +90,7 @@ struct LevelScene {
 			// slime - static unless player is in front
 			if (auto mob = dynamic_pointer_cast<Slime>(c)) {
 				// on collision, walk mob and play explosion animation
-				r = gfx.dir2point(mob->dir, 2);
+				r = gfx.dir2point(mob->dir);
 				if (mob->tx()+r.x == player.tx() && mob->ty()+r.y == player.ty()) {
 					player.kill();
 					explode(player);
@@ -103,17 +103,17 @@ struct LevelScene {
 			// bear - guard patrol
 			else if (auto mob = dynamic_pointer_cast<Bear>(c)) {
 				// on collision, walk mob and play explosion animation
-				r = gfx.dir2point(mob->dir, 2);
+				r = gfx.dir2point(mob->dir);
 				if (mob->tx()+r.x == player.tx() && mob->ty()+r.y == player.ty()) {
 					player.kill();
 					explode(player);
 				}
-				if (!collideMap(*mob, mob->dir, 2)) {
+				if (!collideMap(*mob, mob->dir)) {
 					for (int i = 0; i < tsize; i++) {
 						mob->x += r.x, mob->y += r.y;
 						xpaint();
 					}
-					if (collideMap(*mob, mob->dir, 2))
+					if (collideMap(*mob, mob->dir))
 						mob->face((mob->dir + 2) % 4);
 				}
 			}
@@ -129,7 +129,7 @@ struct LevelScene {
 		}
 	}
 
-	int collideMap(Mob &mob, int dir, int dist) {
+	int collideMap(Mob &mob, int dir, int dist=1) {
 		for (int d = 1; d <= dist; d++) {
 			auto r = gfx.dir2point(dir, d);
 			auto c = tmap.at(mob.tx() + r.x, mob.ty() + r.y).collision;
@@ -150,14 +150,8 @@ struct LevelScene {
 		if (mobs.children.size() > 0)  return;
 		for (int y = 0; y < tmap.theight; y++)
 		for (int x = 0; x < tmap.twidth; x++)
-			if (tmap.at(x, y).tile == TILE_DOOR) {
-				if (tmap.at(x, y-1).tile == TILE_EXIT || tmap.at(x, y+1).tile == TILE_EXIT)
-					tmap.set(x, y, TILE_PATHV, 0);
-				else if (tmap.at(x-1, y).tile == TILE_EXIT || tmap.at(x+1, y).tile == TILE_EXIT)
-					tmap.set(x, y, TILE_PATHH, 0);
-				else
-					tmap.set(x, y, 0, 0);	
-			}
+			if (tmap.at(x, y).tile == TILE_DOOR)
+				tmap.set(x, y, 0, 0);
 	}
 
 	// background actions update
