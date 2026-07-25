@@ -26,8 +26,10 @@ struct TileMap : Paintable {
 		loadlayer(doc, cdata, "map/layer[@name='collision']/data");
 		loadex   (doc);
 		// sanity check
-		if (twidth == 0 || theight == 0 || twidth*theight != (int)data.size() || data.size() != cdata.size())
-			return printf("map parse error\n"), -1;
+		if (twidth == 0 || theight == 0 || twidth*theight != (int)data.size() || (cdata.size() > 0 && data.size() != cdata.size()))
+			return printf("map parse error\n"), 0;
+		if (cdata.size() == 0)
+			printf("map warning: missing collision layer\n");
 		// ok
 		printf("map loaded '%s': w: %d, h: %d\n", fname.c_str(), twidth, theight);
 		return 1;
@@ -61,13 +63,12 @@ struct TileMap : Paintable {
 		Color color = { 255, 0, 0, 64 };
 		for (int yy = 0; yy < theight; yy++)
 		for (int xx = 0; xx < twidth; xx++) {
+			auto tile = at(xx, yy);
 			// show map tile
-			int t = data.at(yy * twidth + xx);
-			if (t > 0)
-				Screen::blitt(texture, tsize, t-1, xoff+x + xx*tsize, yoff+y + yy*tsize);
+			if (tile.tile > 0)
+				Screen::blitt(texture, tsize, tile.tile-1, xoff+x + xx*tsize, yoff+y + yy*tsize);
 			// show collision layer
-			int c = cdata.at(yy * twidth + xx);
-			if (c > 0 && debug)
+			if (tile.collision > 0 && debug)
 				DrawRectangle(xoff+x + xx*tsize, yoff+y + yy*tsize, tsize, tsize, color);
 		}
 	}
@@ -75,13 +76,14 @@ struct TileMap : Paintable {
 	tiledata at(int tx, int ty) {
 		if (tx < 0 || ty < 0 || tx >= twidth || ty >= theight)
 			return { 0, boundscollide };
-		return { data[ty*twidth+tx], cdata[ty*twidth+tx] };
+		return { data.at(ty*twidth+tx), cdata.size() > 0 ? cdata.at(ty*twidth+tx) : 0 };
 	}
 
 	void set(int tx, int ty, int tile, int collide) {
 		if (tx < 0 || ty < 0 || tx >= twidth || ty >= theight)
 			return;
 		data [ty*twidth+tx] = tile;
-		cdata[ty*twidth+tx] = collide;
+		if (cdata.size() > 0)
+			cdata[ty*twidth+tx] = collide;
 	}
 };
