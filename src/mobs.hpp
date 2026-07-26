@@ -24,7 +24,7 @@ struct Mob : Sprite {
 		if (!alive)  return;
 		auto r = gfx.dir2point(dir, tsize);
 		float rot = gfx.dir2rot(dir);
-		gfx.blittr(textureExtras, tsize, 1, xoff+x+r.x, yoff+y+r.y, rot);
+		gfx.blittr(textureExtras, tsize, 0, xoff+x+r.x, yoff+y+r.y, rot);
 		Sprite::paint(xoff, yoff);
 	}
 };
@@ -53,6 +53,20 @@ struct Archer : Enemy {
 
 struct WolfDog : Enemy {
 	WolfDog() { id = "wolfdog"; tile = 5; }
+};
+
+// power up get
+struct PowerUp : Mob {
+	PowerUp() {
+		id = "powerup";
+		texture = textureExtras;
+		tile = 4;
+	}
+
+	virtual void paint(int xoff, int yoff) {
+		Sprite::paint(xoff, yoff);
+		gfx.blittr(textureExtras, tsize, 4+dir, xoff+x, yoff+y, 90);
+	}
 };
 
 // misc

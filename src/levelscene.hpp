@@ -41,6 +41,11 @@ struct LevelScene {
 				mob->tpos(m.tx, m.ty);
 				mob->face(m.dir);
 				mobs.append(mob);
+			} else if (m.type == "powerup") {
+				auto mob = make_shared<PowerUp>();
+				mob->tpos(m.tx, m.ty);
+				mob->face(m.dir);
+				mobs.append(mob);
 			} else {
 				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
 			}
