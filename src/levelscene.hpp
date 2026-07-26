@@ -10,6 +10,7 @@ struct LevelScene {
 	Wizzard player;
 	Container mobs;
 	Container explosions;
+	Container powerups;
 	string lvlname;
 
 	int load(int levelno, const string& fname, const string& name) {
@@ -82,6 +83,12 @@ struct LevelScene {
 					mobs.remove(m);
 					explode(*m);
 				}
+			} else if (auto m = dynamic_pointer_cast<PowerUp>(c)) {
+				if (player.tx()+r.x == m->tx() && player.ty()+r.y == m->ty()) {
+					m->kill();
+					mobs.remove(m);
+					addPowerUp(m);
+				}
 			}
 		}
 		// walk player
@@ -151,6 +158,19 @@ struct LevelScene {
 		explosions.append( make_shared<Explosion>(mob.tx(), mob.ty()) );
 	}
 
+	void addPowerUp(shared_ptr<PowerUp> p) {
+		powerups.append(p);
+		p->x = p->y = 0;
+		powerups.x = gfx.screen.width - (tsize * powerups.children.size());
+		powerups.y = gfx.screen.height - tsize;
+	}
+
+	void removePowerUp() {
+		powerups.children.pop_back();
+		powerups.x = gfx.screen.width - (tsize * powerups.children.size());
+		powerups.y = gfx.screen.height - tsize;
+	}
+
 	void openDoor() {
 		if (mobs.children.size() > 0)  return;
 		for (int y = 0; y < tmap.theight; y++)
@@ -173,6 +193,7 @@ struct LevelScene {
 		mobs.paint(x, y);
 		player.paint(x, y);
 		explosions.paint(x, y);
+		powerups.paint(0, 0);
 		gfx.text(lvlname, 1, gfx.screen.height - 10, GREEN);
 	}
 	// update, paint, flip
