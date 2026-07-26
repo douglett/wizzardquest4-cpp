@@ -10,7 +10,7 @@ struct LevelScene {
 	Wizzard player;
 	Container mobs;
 	Container explosions;
-	Container powerups;
+	Container spells;
 	string lvlname;
 
 	int load(int levelno, const string& fname, const string& name) {
@@ -42,8 +42,8 @@ struct LevelScene {
 				mob->tpos(m.tx, m.ty);
 				mob->face(m.dir);
 				mobs.append(mob);
-			} else if (m.type == "powerup") {
-				auto mob = make_shared<PowerUp>();
+			} else if (m.type == "spell") {
+				auto mob = make_shared<Spell>();
 				mob->tpos(m.tx, m.ty);
 				mob->face(m.dir);
 				mobs.append(mob);
@@ -61,6 +61,7 @@ struct LevelScene {
 			if      (!player.alive)                          return 1;
 			else if (IsKeyPressed(KEY_R))                    return 1;
 			else if (playerOnExit())                         return 2;
+			else if (player.alive && IsKeyDown(KEY_C))       pcast();
 			else if (player.alive && IsKeyDown(KEY_UP))      pwalk(0);
 			else if (player.alive && IsKeyDown(KEY_RIGHT))   pwalk(1);
 			else if (player.alive && IsKeyDown(KEY_DOWN))    pwalk(2);
@@ -83,11 +84,11 @@ struct LevelScene {
 					mobs.remove(m);
 					explode(*m);
 				}
-			} else if (auto m = dynamic_pointer_cast<PowerUp>(c)) {
+			} else if (auto m = dynamic_pointer_cast<Spell>(c)) {
 				if (player.tx()+r.x == m->tx() && player.ty()+r.y == m->ty()) {
 					m->kill();
 					mobs.remove(m);
-					addPowerUp(m);
+					addSpell(m);
 				}
 			}
 		}
@@ -141,6 +142,24 @@ struct LevelScene {
 		}
 	}
 
+	void pcast() {
+		player.blend = { 255, 100, 100, 255 };
+		int dir = -1;
+		if      (IsKeyDown(KEY_UP))      dir = 0;
+		else if (IsKeyDown(KEY_RIGHT))   dir = 1;
+		else if (IsKeyDown(KEY_DOWN))    dir = 2;
+		else if (IsKeyDown(KEY_LEFT))    dir = 3;
+		if (dir >= 0) player.face(dir);
+		// no cast
+		if (dir == -1 || spells.children.size() == 0) {
+			xpaint();
+			player.blend = WHITE;
+			return;
+		}
+		// cast
+		xpaint();
+	}
+
 	int collideMap(Mob &mob, int dir, int dist=1) {
 		for (int d = 1; d <= dist; d++) {
 			auto r = gfx.dir2point(dir, d);
@@ -158,17 +177,17 @@ struct LevelScene {
 		explosions.append( make_shared<Explosion>(mob.tx(), mob.ty()) );
 	}
 
-	void addPowerUp(shared_ptr<PowerUp> p) {
-		powerups.append(p);
+	void addSpell(shared_ptr<Spell> p) {
+		spells.append(p);
 		p->x = p->y = 0;
-		powerups.x = gfx.screen.width - (tsize * powerups.children.size());
-		powerups.y = gfx.screen.height - tsize;
+		spells.x = gfx.screen.width - (tsize * spells.children.size());
+		spells.y = gfx.screen.height - tsize;
 	}
 
-	void removePowerUp() {
-		powerups.children.pop_back();
-		powerups.x = gfx.screen.width - (tsize * powerups.children.size());
-		powerups.y = gfx.screen.height - tsize;
+	void removeSpell() {
+		spells.children.pop_back();
+		spells.x = gfx.screen.width - (tsize * spells.children.size());
+		spells.y = gfx.screen.height - tsize;
 	}
 
 	void openDoor() {
@@ -193,7 +212,7 @@ struct LevelScene {
 		mobs.paint(x, y);
 		player.paint(x, y);
 		explosions.paint(x, y);
-		powerups.paint(0, 0);
+		spells.paint(0, 0);
 		gfx.text(lvlname, 1, gfx.screen.height - 10, GREEN);
 	}
 	// update, paint, flip

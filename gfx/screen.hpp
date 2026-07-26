@@ -50,13 +50,13 @@ struct Screen {
 	}
 
 	// blit texture
-	static void blitt(Texture2D texture, int tsize, int tile, int x, int y) {
+	static void blitt(Texture2D texture, int tsize, int tile, int x, int y, Color blend=WHITE) {
 		int tx = tile % (texture.width / tsize);
 		int ty = tile / (texture.width / tsize);
 		float t = tsize;
 		Rectangle src{ tx*t, ty*t, t, t };
 		Vector2   dst{ float(x), float(y) };
-		DrawTextureRec(texture, src, dst, WHITE);
+		DrawTextureRec(texture, src, dst, blend);
 	}
 
 	static void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot) {

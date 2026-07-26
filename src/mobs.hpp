@@ -56,9 +56,9 @@ struct WolfDog : Enemy {
 };
 
 // power up get
-struct PowerUp : Mob {
-	PowerUp() {
-		id = "powerup";
+struct Spell : Mob {
+	Spell() {
+		id = "spell";
 		texture = textureExtras;
 		tile = 4;
 	}
