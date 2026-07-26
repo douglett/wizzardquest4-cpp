@@ -150,24 +150,66 @@ struct LevelScene {
 		else if (IsKeyDown(KEY_DOWN))    dir = 2;
 		else if (IsKeyDown(KEY_LEFT))    dir = 3;
 		if (dir >= 0) player.face(dir);
-		// no cast
-		if (dir == -1 || spells.children.size() == 0) {
-			xpaint();
-			player.blend = WHITE;
-			return;
-		}
-		// cast
 		xpaint();
+		player.blend = WHITE;
+		// no cast
+		if (dir == -1 || spells.children.size() == 0 || collideMap(player, dir))
+			return;
+		// cast
+		auto spell = dynamic_pointer_cast<Mob>(spells.children.back());
+		spells.remove(spell);
+		mobs.append(spell);
+		auto pos = gfx.dir2point(dir);
+		spell->x = player.x + pos.x*tsize;
+		spell->y = player.y + pos.y*tsize;
+		xpaint();
+		// move spell
+		while (true) {
+			if (auto e = collideEnemy(*spell)) {
+				spell->kill();
+				mobs.remove(spell);
+				e->kill();
+				explode(*e);
+				mobs.remove(e);
+				break;
+			}
+			if (collideMap(*spell, dir))
+				break;
+			for (int i = 0; i < tsize; i++) {
+				spell->x += pos.x, spell->y += pos.y;
+				xpaint();
+			}
+		}
+		// update level
+		openDoor();
 	}
 
-	int collideMap(Mob &mob, int dir, int dist=1) {
+	int collideMap(Mob &mob, int dir=-1, int dist=1) {
 		for (int d = 1; d <= dist; d++) {
 			auto r = gfx.dir2point(dir, d);
-			auto t = tmap.at(mob.tx() + r.x, mob.ty() + r.y).tile;
-			if (t > 0 && t != TILE_EXIT) return t;
+			auto t = tmap.at(mob.tx() + r.x, mob.ty() + r.y);
+			if (t.collision)  return 1;
+			if (t.tile > 0 && t.tile != TILE_EXIT)  return t.tile;
 		}
 		return 0;
 	}
+	
+	shared_ptr<Enemy> collideEnemy(Mob& mob, int dir=-1) {
+		auto pos = gfx.dir2point(dir);
+		for (auto c : mobs.children)
+			if (auto m = dynamic_pointer_cast<Enemy>(c))
+				if (mob.tx()+pos.x == m->tx() && mob.ty()+pos.y == m->ty())
+					return m;
+		return NULL;
+	}
+
+	// int killEnemy(Mob& mob, int dir) {
+	// 	if (auto e = collideEnemy(mob, dir)) {
+	// 		mob.kill();
+	// 		e->kill();
+	// 		explode(*e);
+	// 	}
+	// }
 
 	int playerOnExit() {
 		return tmap.at(player.tx(), player.ty()).tile == TILE_EXIT;
