@@ -67,7 +67,7 @@ struct Spell : Mob {
 
 // misc
 struct Explosion : Paintable {
-	int alive = true, tsize = 16, frame = 0;
+	int alive = true, tsize = 16, framemax = tsize*3, frame = 0;
 
 	Explosion(int tx, int ty) {
 		id = "explosion";
@@ -77,18 +77,20 @@ struct Explosion : Paintable {
 	virtual void update() {
 		if (!alive)  return;
 		frame++;
-		if (frame > tsize*3)  alive = false;
+		if (frame > framemax)  alive = false;
 	}
 
 	virtual void paint(int xoff, int yoff) {
 		if (!alive)  return;
-		auto col = PINK; // base color
-		col.a = min((1 - (double(frame) / (tsize*3))) * 2 * 255, 255.0); // fade out at the end
-		int c = tsize/2; // center
+		// auto col = WHITE; // base color
+		// col.a = min((1 - (double(frame) / (framemax))) * 2 * 255, 255.0); // fade out at the end
+		// int c = tsize/2; // center
+		if (frame > framemax/2 && frame % 2 == 0)  return;
 		for (int i = 0; i < 8; i++) {
 			int xx = cos(numbers::pi * 2 / 8 * i) * frame;
 			int yy = sin(numbers::pi * 2 / 8 * i) * frame;
-			DrawCircle(xoff+x+c+xx, yoff+y+c+yy, 3, col);
+			// DrawCircle(xoff+x+c+xx, yoff+y+c+yy, 3, col);
+			gfx.blitt(textureExtras, tsize, 2, xoff+x+xx, yoff+y+yy);
 		}
 	}
 };

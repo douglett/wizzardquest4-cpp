@@ -21,12 +21,12 @@ struct GFX {
 		screen.text(str, x, y, col);
 	}
 
-	void blitt(Texture2D texture, int tsize, int tile, int x, int y) {
-		screen.blitt(texture, tsize, tile, x, y);
+	void blitt(Texture2D texture, int tsize, int tile, int x, int y, Color blend=WHITE) {
+		screen.blitt(texture, tsize, tile, x, y, blend);
 	}
 
-	void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot) {
-		screen.blittr(texture, tsize, tile, x, y, rot);
+	void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot, Color blend=WHITE) {
+		screen.blittr(texture, tsize, tile, x, y, rot, blend);
 	}
 
 	// helpers
