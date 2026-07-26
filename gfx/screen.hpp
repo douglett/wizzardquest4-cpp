@@ -59,13 +59,13 @@ struct Screen {
 		DrawTextureRec(texture, src, dst, blend);
 	}
 
-	static void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot) {
+	static void blittr(Texture2D texture, int tsize, int tile, int x, int y, float rot, Color blend=WHITE) {
 		int tx = tile % (texture.width / tsize);
 		int ty = tile / (texture.width / tsize);
 		float t = tsize;
 		Rectangle src{ tx*t, ty*t, t, t };
 		Vector2   ori{ float(tsize) / 2, float(tsize) / 2 };
 		Rectangle dst{ x+ori.x, y+ori.y, float(tsize), float(tsize) };
-		DrawTexturePro(texture, src, dst, ori, rot, WHITE);
+		DrawTexturePro(texture, src, dst, ori, rot, blend);
 	}
 };

@@ -3,11 +3,12 @@
 
 struct Sprite : Paintable {
 	int tsize = 16, tile = 0;
-	Color blend = WHITE;
 	Texture2D texture;
+	Color blend = WHITE;
+	float rot = 0;
 
 	virtual void paint(int xoff, int yoff) {
-		Screen::blitt(texture, tsize, tile, xoff+x, yoff+y, blend);
+		Screen::blittr(texture, tsize, tile, xoff+x, yoff+y, rot, blend);
 	}
 
 	int  tx() { return x / tsize; }

@@ -12,13 +12,9 @@ struct Mob : Sprite {
 		face(dir);
 	}
 
-	void init() { texture = textureSprites; }
-	void face(int mdir) { dir = mdir; }
-
-	void kill() {
-		printf("kill: %s, %lld\n", id.c_str(), (size_t)this);
-		alive = false;
-	}
+	virtual void init() { texture = textureSprites; }
+	virtual void face(int mdir) { dir = mdir; }
+	virtual void kill() { alive = false; printf("kill: %s, %lld\n", id.c_str(), (size_t)this); }
 
 	virtual void paint(int xoff, int yoff) {
 		if (!alive)  return;
@@ -57,15 +53,15 @@ struct WolfDog : Enemy {
 
 // power up get
 struct Spell : Mob {
-	Spell() {
-		id = "spell";
-		texture = textureExtras;
-		tile = 4;
-	}
-
+	int spellid = 0, ispickup = false;
+	Spell() { id = "spell"; texture = textureExtras; }
+	virtual void face(int mdir) { dir = mdir; rot = gfx.dir2rot(dir); ispickup = false; }
+	void setPickup(int id) { spellid = id; tile = 4 + id; face(1); ispickup = true; }
+	void setPickup() { setPickup(spellid); }
+	
 	virtual void paint(int xoff, int yoff) {
+		if (ispickup)  gfx.blitt(textureExtras, tsize, 4, xoff+x, yoff+y);
 		Sprite::paint(xoff, yoff);
-		gfx.blittr(textureExtras, tsize, 4+dir, xoff+x, yoff+y, 90);
 	}
 };
 

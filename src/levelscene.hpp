@@ -45,7 +45,7 @@ struct LevelScene {
 			} else if (m.type == "spell") {
 				auto mob = make_shared<Spell>();
 				mob->tpos(m.tx, m.ty);
-				mob->face(m.dir);
+				mob->setPickup(m.dir);  // use dir as spell id override for now
 				mobs.append(mob);
 			} else {
 				printf("Error: unknown mob type: '%s'\n", m.type.c_str());
@@ -156,12 +156,13 @@ struct LevelScene {
 		if (dir == -1 || spells.children.size() == 0 || collideMap(player, dir))
 			return;
 		// cast
-		auto spell = dynamic_pointer_cast<Mob>(spells.children.back());
+		auto spell = dynamic_pointer_cast<Spell>(spells.children.back());
 		spells.remove(spell);
 		mobs.append(spell);
 		auto pos = gfx.dir2point(dir);
 		spell->x = player.x + pos.x*tsize;
 		spell->y = player.y + pos.y*tsize;
+		spell->face(dir);
 		xpaint();
 		// move spell
 		while (true) {
@@ -173,8 +174,10 @@ struct LevelScene {
 				mobs.remove(e);
 				break;
 			}
-			if (collideMap(*spell, dir))
+			if (collideMap(*spell, dir)) {
+				spell->setPickup();
 				break;
+			}
 			for (int i = 0; i < tsize; i++) {
 				spell->x += pos.x, spell->y += pos.y;
 				xpaint();
@@ -202,14 +205,6 @@ struct LevelScene {
 					return m;
 		return NULL;
 	}
-
-	// int killEnemy(Mob& mob, int dir) {
-	// 	if (auto e = collideEnemy(mob, dir)) {
-	// 		mob.kill();
-	// 		e->kill();
-	// 		explode(*e);
-	// 	}
-	// }
 
 	int playerOnExit() {
 		return tmap.at(player.tx(), player.ty()).tile == TILE_EXIT;
@@ -264,12 +259,3 @@ struct LevelScene {
 		gfx.flip();
 	}
 };
-
-
-// struct Timer {
-// 	int time = 0, tt = 0;
-// 	bool started = false, finished = false;
-// 	void start()   { tt = time, started = true, finished = false; }
-// 	void update()  { if (started &&--tt == 0) finished = true; }
-// 	int  running() { return started && !finished; }
-// };
