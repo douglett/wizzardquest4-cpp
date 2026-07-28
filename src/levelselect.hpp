@@ -13,7 +13,7 @@ struct LevelSelect {
 		{ "sm5.tmx", "Porridge" },
 		{ "sm6.tmx", "Magic Time" },
 	};
-	int levelno = 6;
+	int levelno = 5;
 	LevelScene level;
 
 	void allLevels() {
