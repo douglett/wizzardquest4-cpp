@@ -4,7 +4,7 @@
 #include "tilemapex.hpp"
 
 struct LevelScene {
-	const int TILE_DOOR = 17, TILE_EXIT = 13, TILE_PATHH = 18, TILE_PATHV = 19;
+	const int TILE_DOOR = 17, TILE_EXIT = 13, TILE_ZOOM_N = 18;
 	int x = 0, y = 0, tsize = 16;
 	TileMapEx tmap;
 	Wizzard player;
@@ -97,6 +97,16 @@ struct LevelScene {
 		for (int i = 0; i < tsize; i++) {
 			player.x += r.x, player.y += r.y;
 			xpaint();
+		}
+		// activate tile
+		if (auto t = tmap.at(player.tx(), player.ty()).tile; t >= TILE_ZOOM_N && t <= TILE_ZOOM_N+4) {
+			int dir = t - TILE_ZOOM_N;
+			player.face(dir);
+			r = gfx.dir2point(dir);
+			for (int i = 0; i < tsize; i++) {
+				player.x += r.x, player.y += r.y;
+				xpaint();
+			}
 		}
 		// walk mobs (one at a time)
 		for (auto c : mobs.children) {
@@ -192,7 +202,8 @@ struct LevelScene {
 			auto r = gfx.dir2point(dir, d);
 			auto t = tmap.at(mob.tx() + r.x, mob.ty() + r.y);
 			if (t.collision)  return 1;
-			if (t.tile > 0 && t.tile != TILE_EXIT)  return t.tile;
+			if (t.tile > 0 && t.tile != TILE_EXIT && !(t.tile >= TILE_ZOOM_N && t.tile < TILE_ZOOM_N+4))
+				return t.tile;
 		}
 		return 0;
 	}

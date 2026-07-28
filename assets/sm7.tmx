@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="7" height="5" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="21">
+ <tileset firstgid="1" name="monotiles" tilewidth="16" tileheight="16" tilecount="24" columns="8">
+  <image source="monotiles.png" width="128" height="48"/>
+ </tileset>
+ <tileset firstgid="25" name="sprites2" tilewidth="16" tileheight="16" tilecount="8" columns="4">
+  <image source="sprites2.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="33" name="extras" tilewidth="16" tileheight="16" tilecount="8" columns="4">
+  <image source="extras.png" width="64" height="32"/>
+ </tileset>
+ <layer id="1" name="map" width="7" height="5">
+  <data encoding="csv">
+15,15,15,15,15,15,0,
+15,0,0,19,0,15,15,
+15,0,15,15,0,17,13,
+15,0,0,0,0,15,15,
+15,15,15,15,15,15,0
+</data>
+ </layer>
+ <objectgroup id="6" name="mobs">
+  <object id="6" type="wizzard" gid="26" x="16" y="32" width="16" height="16">
+   <properties>
+    <property name="dir" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="19" type="bear" gid="28" x="16" y="64" width="16" height="16">
+   <properties>
+    <property name="dir" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
