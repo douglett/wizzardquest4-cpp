@@ -48,7 +48,13 @@ struct Archer : Enemy {
 };
 
 struct WolfDog : Enemy {
-	WolfDog() { id = "wolfdog"; tile = 5; }
+	WolfDog() { id = "wolfdog"; tile = 3; }
+};
+
+struct Arrow : Mob {
+	Arrow() { id = "arrow"; tile = 3; texture = textureExtras; }
+	virtual void face(int mdir) { dir = mdir; rot = gfx.dir2rot(dir); }
+	virtual void paint(int xoff, int yoff) { Sprite::paint(xoff, yoff); }
 };
 
 // power up get

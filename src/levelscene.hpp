@@ -42,6 +42,11 @@ struct LevelScene {
 				mob->tpos(m.tx, m.ty);
 				mob->face(m.dir);
 				mobs.append(mob);
+			} else if (m.type == "archer") {
+				auto mob = make_shared<Archer>();
+				mob->tpos(m.tx, m.ty);
+				mob->face(m.dir);
+				mobs.append(mob);
 			} else if (m.type == "spell") {
 				auto mob = make_shared<Spell>();
 				mob->tpos(m.tx, m.ty);
@@ -142,6 +147,35 @@ struct LevelScene {
 					}
 					if (collideMap(*mob, mob->dir))
 						mob->face((mob->dir + 2) % 4);
+				}
+			}
+			// archer - rotate and shoot arrow
+			else if (auto mob = dynamic_pointer_cast<Archer>(c)) {
+				// check if player is in front
+				int dist = 0;
+				if (mob->dir == 3 && mob->ty() == player.ty()) {
+					if (player.tx() < mob->tx() && player.tx() >= mob->tx() - 3) {
+						dist = mob->tx() - player.tx();
+						printf("attack\n");
+					}
+				}
+				// shoot arrow
+				if (dist) {
+					auto arrow = make_shared<Arrow>();
+					arrow->face(mob->dir);
+					arrow->tpos(mob->tx(), mob->ty());
+					explosions.append(arrow);
+					r = gfx.dir2point(arrow->dir, 3);
+					for (int i = 0; i < tsize*dist; i+=3) {
+						arrow->x += r.x, arrow->y += r.y;
+						xpaint();
+					}
+					for (int i = 0; i < 10; i++) {
+						xpaint();
+					}
+					explosions.remove(arrow);
+					player.kill();
+					explode(player);
 				}
 			}
 		}
