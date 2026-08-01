@@ -151,13 +151,17 @@ struct LevelScene {
 			}
 			// archer - rotate and shoot arrow
 			else if (auto mob = dynamic_pointer_cast<Archer>(c)) {
+				// rotate archer clockwise to empty square
+				for (int i = 0; i < 4; i++) {
+					mob->face((mob->dir + 1) % 4);
+					if (!collideMap(*mob, mob->dir)) break;
+				}
 				// check if player is in front
 				int dist = 0;
-				if (mob->dir == 3 && mob->ty() == player.ty()) {
-					if (player.tx() < mob->tx() && player.tx() >= mob->tx() - 3) {
-						dist = mob->tx() - player.tx();
-						printf("attack\n");
-					}
+				r = gfx.dir2point(mob->dir);
+				for (int d = 1; d <= 3; d++) {
+					if (collideMap(*mob, mob->dir, d)) break;
+					if (collidePlayer(*mob, mob->dir, d)) { dist = d; break; }
 				}
 				// shoot arrow
 				if (dist) {
@@ -242,6 +246,15 @@ struct LevelScene {
 			if (t.collision)  return 1;
 			if (t.tile > 0 && t.tile != TILE_EXIT && t.tile != TILE_SPIKES && !(t.tile >= TILE_ZOOM_N && t.tile < TILE_ZOOM_N+4))
 				return t.tile;
+		}
+		return 0;
+	}
+
+	int collidePlayer(Mob &mob, int dir=-1, int dist=1) {
+		for (int d = 1; d <= dist; d++) {
+			auto r = gfx.dir2point(dir, d);
+			if (player.tx() == mob.tx() + r.x && player.ty() == mob.ty() + r.y)
+				return 1;
 		}
 		return 0;
 	}

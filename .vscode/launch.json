@@ -27,7 +27,12 @@
                     "description": "Set Disassembly Flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
-                }
+                },
+                // {
+                //     "description": "Skip files",
+                //     "text": "-interpreter-exec console \"skip -gfi C:/bin\"",
+                //     "ignoreFailures": false
+                // }
             ]
         }
     ]

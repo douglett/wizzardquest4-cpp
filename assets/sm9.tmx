@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="8" height="6" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="23">
+<map version="1.10" tiledversion="1.12.2" orientation="orthogonal" renderorder="right-down" width="7" height="6" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="23">
  <tileset firstgid="1" name="monotiles" tilewidth="16" tileheight="16" tilecount="24" columns="8">
   <image source="monotiles.png" width="128" height="48"/>
  </tileset>
@@ -9,14 +9,14 @@
  <tileset firstgid="33" name="extras" tilewidth="16" tileheight="16" tilecount="8" columns="4">
   <image source="extras.png" width="64" height="32"/>
  </tileset>
- <layer id="1" name="map" width="8" height="6">
+ <layer id="1" name="map" width="7" height="6">
   <data encoding="csv">
-15,15,15,15,15,15,15,15,
-15,0,0,0,0,0,0,15,
-15,0,15,15,15,15,0,15,
-15,0,0,0,0,0,0,15,
-15,15,15,15,15,15,17,15,
-0,0,0,0,0,15,13,15
+15,15,15,15,15,15,15,
+15,0,0,0,0,0,15,
+15,0,15,15,15,0,15,
+15,0,0,0,0,0,15,
+15,15,15,15,15,17,15,
+0,0,0,0,15,13,15
 </data>
  </layer>
  <objectgroup id="6" name="mobs" class="spell">
@@ -25,7 +25,7 @@
     <property name="dir" type="int" value="1"/>
    </properties>
   </object>
-  <object id="22" type="archer" gid="29" x="80" y="32" width="16" height="16">
+  <object id="22" type="archer" gid="29" x="64" y="32" width="16" height="16">
    <properties>
     <property name="dir" type="int" value="3"/>
    </properties>
