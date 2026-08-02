@@ -104,18 +104,22 @@ struct LevelScene {
 			xpaint();
 		}
 		// activate tile
-		auto t = tmap.at(player.tx(), player.ty()).tile;
-		if (t >= TILE_ZOOM_N && t < TILE_ZOOM_N+4) {
-			int dir = t - TILE_ZOOM_N;
-			player.face(dir);
-			r = gfx.dir2point(dir);
-			for (int i = 0; i < tsize; i++) {
-				player.x += r.x, player.y += r.y;
-				xpaint();
+		while (true) {
+			auto t = tmap.at(player.tx(), player.ty()).tile;
+			if (t >= TILE_ZOOM_N && t < TILE_ZOOM_N+4) {
+				int dir = t - TILE_ZOOM_N;
+				player.face(dir);
+				r = gfx.dir2point(dir);
+				for (int i = 0; i < tsize; i++) {
+					player.x += r.x, player.y += r.y;
+					xpaint();
+				}
+				continue;
+			} else if (t == TILE_SPIKES) {
+				player.kill();
+				explode(player);
 			}
-		} else if (t == TILE_SPIKES) {
-			player.kill();
-			explode(player);
+			break;
 		}
 		// walk mobs (one at a time)
 		for (auto c : mobs.children) {

@@ -51,7 +51,8 @@ struct WolfDog : Enemy {
 	WolfDog() { id = "wolfdog"; tile = 3; }
 };
 
-struct Arrow : Mob {
+struct Arrow : Sprite {
+	int dir = 0;
 	Arrow() { id = "arrow"; tile = 3; texture = textureExtras; }
 	virtual void face(int mdir) { dir = mdir; rot = gfx.dir2rot(dir); }
 	virtual void paint(int xoff, int yoff) { Sprite::paint(xoff, yoff); }
